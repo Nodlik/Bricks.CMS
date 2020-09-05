@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "jsx": "react",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "baseUrl": "./",
+        "resolveJsonModule": true,
+        "paths": {
+            "@libs/*": ["libs/*"],
+            "@modules/*": ["modules/*"],
+            "@apps/*": ["apps/*"],
+            "@client/*": ["apps/client/src/*"],
+        }
+    },
+    "include": ["apps", "modules"],
+    "exclude": ["node_modules", ".vscode"]
+}

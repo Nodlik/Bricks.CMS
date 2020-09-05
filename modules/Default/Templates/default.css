@@ -1,0 +1,102 @@
+.markdown {
+	min-height: 600px;
+	border: solid 1px #eeeeee;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+	padding: 0 10px;
+}
+
+.collectionTitle {
+	color: #555555;
+	border-bottom: solid 1px #eeeeee;
+}
+
+.collectionTitle h4 {
+	text-transform: uppercase;
+
+	margin-bottom: 0;
+	padding-bottom: 5px;
+}
+
+.collectionRow {
+	padding: 15px;
+	margin: 20px 0;
+
+	background-color: #fafafa;
+	border: solid 1px #eeeeee;
+	border-radius: 5px;
+
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+
+	display: flex;
+	flex-wrap: wrap;
+	align-items:  center;
+}
+
+.collectionRow > * { 
+	margin: 0 5px;
+}
+
+.dropZone {
+	border: 'dashed 1px #eee';
+	padding: 10px;
+	background-color: #f9f9f9;
+	color: #555555;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+}
+
+.imagePlace {
+	margin: 10px 0;
+}
+
+.imagePlace img {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+}
+
+.dragHandle {
+	width: 20px;
+	height: 10px;
+	cursor: pointer;
+
+	position: relative;
+}
+
+.imageRow {
+	flex-grow: 10;
+	width: 100%;
+	margin: 10px 0;
+	padding: 10px 0;
+	border-top: solid 1px #999999;
+	border-bottom: solid 1px #999999;
+}
+
+.imageRow img {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+}
+
+.imageRowTitle {
+	text-transform: uppercase;
+	font-size: 80%;
+	display: block;
+	color: #555555;
+	margin-bottom: 5px;
+}
+
+.dragHandle::before {
+	content: " ";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 20px;
+	height: 3px;
+	background-color: #999999;
+}
+
+.dragHandle::after {
+	content: " ";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 20px;
+	height: 3px;
+	background-color: #999999;
+}

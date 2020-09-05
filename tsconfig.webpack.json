@@ -1,0 +1,13 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "experimentalDecorators": true,
+        "target": "es2016",
+        "allowJs": true
+    },
+    "include": ["apps/client/src"],
+    "compileOnSave": false,
+    "exclude": ["apps/server"]
+}

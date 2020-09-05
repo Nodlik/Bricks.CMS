@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "commonjs",
+        "outDir": "./apps/server/dist",
+        "strict": true,
+        "inlineSourceMap": true
+    },
+    "exclude": ["apps/client"]
+}
