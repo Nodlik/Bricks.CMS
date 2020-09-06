@@ -1,4 +1,4 @@
-import { ImageOptions } from '../server';
+import { ImageOptions } from '../init';
 
 import path from 'path';
 import crypto from 'crypto';
@@ -16,7 +16,7 @@ interface ImageLoadingResult {
     original?: string;
 }
 
-export default class ImageLoader {
+export class ImageLoader {
     private imageData: Buffer;
 
     public constructor(imageData: string, private options: ImageOptions) {

@@ -2,7 +2,11 @@ const nameEntity = {
 	key: "site_title",
 	type: "single",
 	display: {
-		name: 'Заголовок сайта'
+		name: 'Заголовок сайта',
+        className: 'testName',
+        style: {
+            color: 'red',
+        },
 	},
 	fields: [
 		{

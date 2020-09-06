@@ -6,6 +6,7 @@
     "scripts": {
         "client:dev": "webpack-dev-server --mode development --open --hot",
         "client:build": "webpack --mode production",
+        "server:prod": "ts-node ./apps/server/src/server.ts",
         "server:run": "node --inspect=5858 -r ts-node/register ./apps/server/src/server.ts",
         "server:build": "tsc -p ./tsconfig.server.json",
         "server:dev": "nodemon"
@@ -29,6 +30,12 @@
     },
     "browser": {
         "child_process": false
+    },
+    "_moduleAliases": {
+        "@root": "./",
+        "@libs": "libs",
+        "@modules": "modules",
+        "@client": "apps/client/src"
     },
     "author": "Nodlik",
     "license": "MIT",
@@ -69,10 +76,10 @@
         "module-alias": "^2.2.2",
         "nodemon": "^2.0.4",
         "prettier": "^2.0.5",
-        "dotenv-webpack": "^2.0.0"
+        "dotenv-webpack": "^2.0.0",
+        "cors": "^2.8.5"
     },
     "dependencies": {
-        "cors": "^2.8.5",
         "draft-js": "^0.11.7",
         "draftjs-to-html": "^0.9.1",
         "react": "^16.13.0",

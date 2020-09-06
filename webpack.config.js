@@ -12,7 +12,6 @@ module.exports = {
         alias: {
             '@apps': path.resolve(__dirname, 'apps'),
             '@libs': path.resolve(__dirname, 'libs'),
-            '@modules': path.resolve(__dirname, 'modules'),
             '@client': path.resolve(__dirname, 'apps/client/src'),
         },
         extensions: ['.ts', '.tsx', '.js'],
@@ -20,14 +19,11 @@ module.exports = {
     mode: 'development',
     optimization: {
         minimizer: [
-            new TerserPlugin({
-                /* additional options here */
-            }),
+            new TerserPlugin({}),
         ],
     },
     plugins: [
         new Dotenv(),
-        new webpack.IgnorePlugin(/sharp/),
         new HtmlWebpackPlugin({
             template: './apps/client/public/index.html',
         }),
@@ -50,13 +46,12 @@ module.exports = {
     target: 'web',
     output: {
         publicPath: '/',
-        filename: 'bundle.js',
+        filename: '[name].[hash:8].js',
         path: path.resolve(__dirname, 'apps/client/dist/'),
     },
     devServer: {
         contentBase: path.join(__dirname, 'apps/client/dist/'),
         port: 3000,
         historyApiFallback: true,
-        // publicPath: '/',
     },
 };

@@ -1,8 +1,11 @@
-import modules from '../modules/modules.json';
+import React from 'react';
 import { IBricksCollection, IField, IEntity } from './types/IBricksDocument';
+import { ENTITY_TYPE } from './types/IConfigTypes';
 
 export type ChangeValueEvent = (key: string, value: any) => void;
 export type EntityChangeEvent = (values: Map<string, any>) => void;
+
+import templates from '../modules/templates';
 
 /**
  * SINGLE ENTITY (NEW, EDIT)
@@ -10,7 +13,7 @@ export type EntityChangeEvent = (values: Map<string, any>) => void;
 export interface IRenderEntityProps {
     document: IEntity;
     templates: BricksTemplateSingleton;
-    onChange?: EntityChangeEvent
+    onChange?: EntityChangeEvent;
 }
 export type EntityFunctionComponent = (props: IRenderEntityProps) => React.ReactElement;
 
@@ -25,7 +28,6 @@ export type EntityCollectionFunctionComponent = (
     props: IRenderCollectionProps
 ) => React.ReactElement;
 
-
 /**
  * FIELD
  */
@@ -38,27 +40,18 @@ export type FieldFunctionComponent = (props: IRenderFieldProps) => React.ReactEl
 export interface ModuleExportTemplates {
     single?: EntityFunctionComponent;
     collection?: EntityCollectionFunctionComponent;
-    fields?: Map<string, FieldFunctionComponent>;
+    fields?: [ENTITY_TYPE, string, FieldFunctionComponent][];
 }
 
 export class BricksTemplateSingleton {
     /** moduleName => react function component */
-    private collectionTemplates: Map<string, EntityCollectionFunctionComponent> = new Map<
-        string,
-        EntityCollectionFunctionComponent
-    >();
+    private collectionTemplates: Map<string, EntityCollectionFunctionComponent> = new Map();
 
     /** moduleName => react function component */
-    private singleTemplates: Map<string, EntityFunctionComponent> = new Map<
-        string,
-        EntityFunctionComponent
-    >();
+    private singleTemplates: Map<string, EntityFunctionComponent> = new Map();
 
     /** moduleName_entityType_fieldType => react function component */
-    private fieldTemplates: Map<string, FieldFunctionComponent> = new Map<
-        string,
-        FieldFunctionComponent
-    >();
+    private fieldTemplates: Map<string, FieldFunctionComponent> = new Map();
 
     private static instance: BricksTemplateSingleton;
 
@@ -73,33 +66,28 @@ export class BricksTemplateSingleton {
     }
 
     public async init() {
-        const m: any = modules;
-        const loadedPromises = [];
+        const moduleTemplates: any = templates();
 
-        for (const el in m) {
-            loadedPromises.push(import(`../modules/${m[el]}`));
-        }
+        for (const moduleName in moduleTemplates) {
+            const currentTemplates: ModuleExportTemplates = moduleTemplates[moduleName];
 
-        const resultLoad = await Promise.all(loadedPromises);
-        resultLoad.map((el) => {
-            const module = el.default;
+            if (currentTemplates) {
+                if (currentTemplates.single)
+                    this.singleTemplates.set(moduleName, currentTemplates.single);
 
-            if ('templates' in module) {
-                const tempaltes: ModuleExportTemplates = module.templates();
+                if (currentTemplates.collection)
+                    this.collectionTemplates.set(moduleName, currentTemplates.collection);
 
-                if (tempaltes.single)
-                    this.singleTemplates.set(module.MODULE_NAME, tempaltes.single);
-
-                if (tempaltes.collection)
-                    this.collectionTemplates.set(module.MODULE_NAME, tempaltes.collection);
-
-                if (tempaltes.fields) {
-                    for (const [name, f] of tempaltes.fields.entries()) {
-                        this.fieldTemplates.set(`${module.MODULE_NAME}_${name}`, f);
+                if (currentTemplates.fields) {
+                    for (const [enitityType, fieldType, component] of currentTemplates.fields) {
+                        this.fieldTemplates.set(
+                            `${moduleName}_${enitityType}_${fieldType}`,
+                            component
+                        );
                     }
                 }
             }
-        });
+        }
     }
 
     public getFieldTemplate(
@@ -118,7 +106,7 @@ export class BricksTemplateSingleton {
         return component;
     }
 
-    public get(fieldType: string, moduleName: string = 'default') {
+    public get(fieldType: string, moduleName: string = 'default'): FieldFunctionComponent {
         return this.getFieldTemplate('collection', fieldType, moduleName);
     }
 

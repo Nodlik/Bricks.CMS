@@ -17,7 +17,7 @@ const commentEntity = {
         },
         {
             key: 'text',
-            type: 'markdown',
+            type: 'html',
             display: {
                 name: 'Текст комментария',
                 description: 'Описание текста публикации',
@@ -67,7 +67,7 @@ const postEntity = {
         },
         {
             key: 'text',
-            type: 'markdown',
+            type: 'html',
             display: {
                 name: 'Текст публикации',
                 description: 'Описание текста публикации',

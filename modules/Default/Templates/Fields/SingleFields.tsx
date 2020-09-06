@@ -32,7 +32,9 @@ export function TextInput(props: IRenderFieldProps) {
 export function MarkdownEditor(props: IRenderFieldProps) {
     const [editorState, setEditorState] = useState(
         EditorState.createWithContent(
-            ContentState.createFromBlockArray(convertFromHTML(props.field.value || "<p></p>").contentBlocks)
+            ContentState.createFromBlockArray(
+                convertFromHTML(props.field.value || '<p></p>').contentBlocks
+            )
         )
     );
 

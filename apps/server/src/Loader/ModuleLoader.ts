@@ -1,6 +1,6 @@
 import { promises as fsPromises } from 'fs';
-import { BricksModule } from '@libs/BricksModule';
 import { Bricks } from '@libs/Bricks';
+import processing from '@modules/processing';
 
 /**
  * Module Loader
@@ -13,15 +13,11 @@ export class ModuleLoader {
     }
 
     public async parseModuleDirectory(): Promise<void> {
-        const dir = await fsPromises.readdir('./modules');
+        const modulesList: any = processing();
 
-        for (const moduleFolder of dir) {
-            const stat = await fsPromises.lstat(`./modules/${moduleFolder}`);
-            if (stat.isDirectory()) {
-                const { default: module } = await import(`@modules/${moduleFolder}/server`);
-
-                module.init(moduleFolder, this.bricks);
-            }
+        for (const moduleName in modulesList) {
+            const init = modulesList[moduleName];
+            init(moduleName, this.bricks);
         }
     }
 }
