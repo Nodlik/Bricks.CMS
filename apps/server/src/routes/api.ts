@@ -4,13 +4,14 @@ import { API_ACTION, ENTITY_TYPE } from '@libs/types/IConfigTypes';
 
 const router = express.Router();
 
-router.get('/:key', async (req, res, next) => {
+router.get('/:key', async (req, res) => {
     const key = req.params.key;
 
     try {
         const entity = BricksData.getEntity(key);
-        if (!entity.hasApiAction(API_ACTION.FETCH))
+        if (!entity.hasApiAction(API_ACTION.FETCH)) {
             throw new Error('The document is not fetchable');
+        }
 
         const docs =
             entity.getType() === ENTITY_TYPE.COLLECTION

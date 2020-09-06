@@ -18,7 +18,7 @@ export function init(name: string, bricks: Bricks): void {
     bricks.registerType('image', 'Mixed');
 
     bricks.registerValueMiddleware('image', async (imageBase64: any, field: Field) => {
-        const loader = new ImageLoader(imageBase64, field.getOptions());
+        const loader = new ImageLoader(imageBase64, field.getOptions() as ImageOptions);
 
         return await loader.load();
     });

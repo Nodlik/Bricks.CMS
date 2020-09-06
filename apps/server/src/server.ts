@@ -13,7 +13,9 @@ import { ConfigLoader } from './Loader/ConfigLoader';
 import { ModuleLoader } from './Loader/ModuleLoader';
 import { Bricks } from '@libs/Bricks';
 
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app: express.Application = express();
 const port = 9000;
@@ -34,7 +36,7 @@ app.use('/entities', entityRouter);
 app.use('/api', apiRouter);
 
 const connectToMongo = async (): Promise<Mongoose> => {
-    return mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`, {
+    return mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME || 'bricks'}`, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
@@ -47,7 +49,7 @@ const init = async () => {
         const bricks = new Bricks();
 
         const moduleLoader = new ModuleLoader(bricks);
-        await moduleLoader.parseModuleDirectory();
+        moduleLoader.parseModuleDirectory();
 
         const loader = new ConfigLoader(bricks);
         await loader.parseConfigDirectory();
@@ -63,6 +65,6 @@ const init = async () => {
     }
 };
 
-init();
+void init();
 
 export default app;

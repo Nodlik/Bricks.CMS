@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import express from 'express';
 import { EntityRepository } from '../Model/Repository/EntityRepository';
 import BricksData from '../Model/BricksData';
 
 const router = express.Router();
 
-router.get('/:key', async (req, res, next) => {
+router.get('/:key', async (req, res) => {
     const key = req.params.key;
 
     const meta = EntityRepository.GetEntityMeta(key);
@@ -24,7 +25,7 @@ router.get('/:key', async (req, res, next) => {
     }
 });
 
-router.get('/:key/first', async (req, res, next) => {
+router.get('/:key/first', async (req, res) => {
     const key = req.params.key;
 
     const item = await EntityRepository.GetFirst(key);
@@ -32,20 +33,22 @@ router.get('/:key/first', async (req, res, next) => {
     res.json(item ? item.toJSON() : null);
 });
 
-router.get('/:key/:id', async (req, res, next) => {
+router.get('/:key/:id', async (req, res) => {
     const key = req.params.key;
     const id = req.params.id;
 
     let item = null;
     try {
         item = await EntityRepository.GetOneById(key, id);
-    } catch {}
+    } catch {
+        //
+    }
 
     res.json(item ? item.toJSON() : null);
 });
 
 /** NEW ENTITY */
-router.post('/:key', async (req, res, next) => {
+router.post('/:key', async (req, res) => {
     const key = req.params.key;
 
     try {
@@ -56,7 +59,7 @@ router.post('/:key', async (req, res, next) => {
 });
 
 /** EDIT ENTITY */
-router.put('/:key/:id', async (req, res, next) => {
+router.put('/:key/:id', async (req, res) => {
     const key = req.params.key;
     const id = req.params.id;
 
@@ -68,7 +71,7 @@ router.put('/:key/:id', async (req, res, next) => {
 });
 
 /** MOVE ENTITY (FUUUUCK!! NOT REST(())) */
-router.patch('/move/:key/:movedId/:targetId', async (req, res, next) => {
+router.patch('/move/:key/:movedId/:targetId', async (req, res) => {
     const key = req.params.key;
     const movedId = req.params.movedId;
     const targetId = req.params.targetId;
@@ -76,38 +79,40 @@ router.patch('/move/:key/:movedId/:targetId', async (req, res, next) => {
     try {
         const entity = BricksData.getEntity(key);
 
-        const sortedField = entity.getEffects().sortable!;
+        if (entity.getEffects().sortable) {
+            const sortedField = entity.getEffects().sortable!;
 
-        const moved = await BricksData.getModel(key).findById(movedId);
-        const target = await BricksData.getModel(key).findById(targetId);
+            const moved = await BricksData.getModel(key).findById(movedId);
+            const target = await BricksData.getModel(key).findById(targetId);
 
-        const Model = BricksData.getModel(key);
+            const Model = BricksData.getModel(key);
 
-        const docs =
-            moved!.get(sortedField) < target!.get(sortedField)
-                ? await Model.find(
-                      Object.fromEntries([[sortedField, { $gt: target!.get(sortedField) }]])
-                  )
-                      .sort(`+${sortedField}`)
-                      .limit(1)
-                : await Model.find(
-                      Object.fromEntries([[sortedField, { $lt: target!.get(sortedField) }]])
-                  )
-                      .sort(`-${sortedField}`)
-                      .limit(1);
-
-        let nextValue = 0;
-        if (!docs[0]) {
-            nextValue =
+            const docs =
                 moved!.get(sortedField) < target!.get(sortedField)
-                    ? target!.get(sortedField) + 1
-                    : target!.get(sortedField) - 1;
-        } else {
-            nextValue = docs[0].get(sortedField);
-        }
+                    ? await Model.find(
+                          Object.fromEntries([[sortedField, { $gt: target!.get(sortedField) }]])
+                      )
+                          .sort(`+${sortedField}`)
+                          .limit(1)
+                    : await Model.find(
+                          Object.fromEntries([[sortedField, { $lt: target!.get(sortedField) }]])
+                      )
+                          .sort(`-${sortedField}`)
+                          .limit(1);
 
-        moved!.set(sortedField, (target!.get(sortedField) + nextValue) / 2);
-        moved!.save();
+            let nextValue = 0;
+            if (!docs[0]) {
+                nextValue =
+                    moved!.get(sortedField) < target!.get(sortedField)
+                        ? (parseFloat(target!.get(sortedField)) + 1)
+                        : (parseFloat(target!.get(sortedField)) - 1);
+            } else {
+                nextValue = parseFloat(docs[0].get(sortedField));
+            }
+
+            moved!.set(sortedField, (parseFloat(target!.get(sortedField)) + nextValue) / 2);
+            await moved!.save();
+        }
 
         res.json({});
     } catch (e) {

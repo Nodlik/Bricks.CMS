@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Folder } from './Unit/Folder';
 import { Entity } from './Unit/Entity';
 import { Bricks } from '@libs/Bricks';
-import mongoose, { Mongoose, Schema, Model } from 'mongoose';
+import mongoose from 'mongoose';
 
-export type MongooseModel = mongoose.Model<mongoose.Document, {}>;
+export type MongooseModel = mongoose.Model<mongoose.Document, Record<string, unknown>>;
 export type MongooseModelMap = Map<string, MongooseModel>;
 
 export class BricksSingleton {
@@ -15,17 +16,21 @@ export class BricksSingleton {
 
     private models!: MongooseModelMap;
 
-    private constructor() {}
+    private constructor() {
+        //
+    }
 
-    public init(folders: Folder[], entities: Map<string, Entity>, bricks: Bricks) {
-        if (this.folders.length > 0) throw new Error('Model already exists');
+    public init(folders: Folder[], entities: Map<string, Entity>, bricks: Bricks): void {
+        if (this.folders.length > 0) {
+            throw new Error('Model already exists');
+        }
 
         this.bricks = bricks;
         this.folders = folders;
         this.entities = entities;
     }
 
-    public setModels(models: MongooseModelMap) {
+    public setModels(models: MongooseModelMap): void {
         this.models = models;
     }
 

@@ -1,15 +1,17 @@
 import BricksData from '../BricksData';
-import { Folder } from '../Unit/Folder';
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose from 'mongoose';
 import { BricksDocument } from '../BricksDocument';
-import { IBricksCollection, IEntity } from '@libs/types/IBricksDocument';
 import { Entity } from '../Unit/Entity';
 
 export class EntityRepository {
-    public static async SaveDocument(doc: mongoose.Document, entity: Entity) {
+    public static async SaveDocument(
+        doc: mongoose.Document,
+        entity: Entity
+    ): Promise<mongoose.Document> {
         if (entity.getEffects().sortable) {
             if (doc.isNew) {
                 doc.set(
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     entity.getEffects().sortable!,
                     await EntityRepository.Count(entity.getKey())
                 );
@@ -32,7 +34,10 @@ export class EntityRepository {
         return BricksData.getEntity(entityKey);
     }
 
-    public static async New(entityKey: string, values: any): Promise<BricksDocument> {
+    public static async New(
+        entityKey: string,
+        values: Record<string, unknown>
+    ): Promise<BricksDocument> {
         const entity = BricksData.getEntity(entityKey);
 
         const row: any = {};
@@ -63,7 +68,7 @@ export class EntityRepository {
     public static async Update(
         entityKey: string,
         id: string,
-        values: any
+        values: Record<string, unknown>
     ): Promise<BricksDocument> {
         const entity = BricksData.getEntity(entityKey);
         const doc = await BricksData.getModel(entityKey).findById(id);
@@ -74,6 +79,7 @@ export class EntityRepository {
 
         for (const [key, value] of Object.entries(values)) {
             if (entity.hasField(key)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const field = entity.getFieldByKey(key)!;
                 doc.set(key, await BricksData.getBricks().getFieldValue(value, field));
             } else if (key === entity.getEffects().sortable) {
@@ -89,11 +95,15 @@ export class EntityRepository {
     public static async GetFirst(entityKey: string): Promise<BricksDocument | null> {
         const entity = BricksData.getEntity(entityKey);
 
-        if (!BricksData.hasModel(entityKey)) return null;
+        if (!BricksData.hasModel(entityKey)) {
+            return null;
+        }
 
         const Model = BricksData.getModel(entityKey);
 
-        if ((await Model.countDocuments()) === 0) return null;
+        if ((await Model.countDocuments()) === 0) {
+            return null;
+        }
 
         const docs = await Model.find();
 
@@ -105,7 +115,8 @@ export class EntityRepository {
         const query = BricksData.getModel(entityKey).find();
 
         if (entity.getEffects().sortable) {
-            query.sort(`-${entity.getEffects().sortable}`);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            void query.sort(`-${entity.getEffects().sortable!}`);
         }
 
         const docs = await query;

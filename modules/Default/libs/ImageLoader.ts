@@ -24,7 +24,7 @@ export class ImageLoader {
     }
 
     public async load(): Promise<ImageLoadingResult> {
-        // todo ПЕРЕПИСТЬ!!!!!
+        // todo ПЕРЕПИСАТЬ!!!!!
         const fileName = crypto
             .createHash('md5')
             .update(this.imageData)
@@ -44,13 +44,13 @@ export class ImageLoader {
                 .jpeg({ quality: 90 })
                 .toFile(path.resolve('', name));
 
-            let result: ImageLoadingResult = {
+            const result: ImageLoadingResult = {
                 name: fileName,
                 thumbnail: `/uploads/${fileName}/${fileName}_thumbnail.jpg`,
             };
 
             if (this.options.sizes) {
-                let resultSizes: ImageSizes = {};
+                const resultSizes: ImageSizes = {};
 
                 for (const sizes of this.options.sizes) {
                     const name = `${uploadDir}/${fileName}_${sizes[0]}-${sizes[1]}.jpg`;

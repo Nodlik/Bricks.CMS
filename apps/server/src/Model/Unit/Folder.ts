@@ -15,7 +15,7 @@ export class Folder extends Unit {
         this.enitityList = item.entities.map((e) => new Entity(e, this, parent));
     }
 
-    public addChildren(newChild: Folder) {
+    public addChildren(newChild: Folder): void {
         this.children.push(newChild);
     }
 

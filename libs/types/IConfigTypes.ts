@@ -49,7 +49,7 @@ export interface IConfigField {
     required?: boolean;
     events?: FieldEvents;
     validators?: FieldValidators;
-    options?: any[];
+    options?: Record<string, unknown>;
 }
 
 export interface IConfigEntity {

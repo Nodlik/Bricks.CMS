@@ -17,6 +17,6 @@
             "@client/*": ["apps/client/src/*"],
         }
     },
-    "include": ["apps", "modules"],
+    "include": ["apps", "modules", "libs"],
     "exclude": ["node_modules", ".vscode"]
 }

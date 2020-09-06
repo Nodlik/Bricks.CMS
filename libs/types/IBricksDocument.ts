@@ -32,7 +32,7 @@ export interface IBricksCollection {
 }
 
 export interface IBricksDocument extends IEntity {
-    id: any;
+    id: string;
     fields: IField[];
 }
 

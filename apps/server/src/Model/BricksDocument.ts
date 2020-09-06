@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 export class BricksDocument {
     private document: mongoose.Document;
     private readonly entity: Entity;
-    private readonly id: any;
+    private readonly id: string;
     private readonly fields: IField[];
 
     public constructor(entity: Entity, document: mongoose.Document) {
@@ -46,7 +46,7 @@ export class BricksDocument {
         return this.fields;
     }
 
-    public getId(): any {
+    public getId(): string {
         return this.id;
     }
 

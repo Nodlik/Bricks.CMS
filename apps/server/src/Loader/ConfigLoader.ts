@@ -1,11 +1,11 @@
 import { promises as fsPromises } from 'fs';
 import { IConfigFolder } from '@libs/types/IConfigTypes';
-import BricksData, { MongooseModelMap } from '../Model/BricksData';
+import BricksData from '../Model/BricksData';
 import { Bricks } from '@libs/Bricks';
 import { Folder } from '../Model/Unit/Folder';
 import { Entity } from '../Model/Unit/Entity';
 
-import mongoose, { Mongoose, Schema, Model } from 'mongoose';
+import mongoose from 'mongoose';
 
 /**
  * Config file Loader
@@ -53,13 +53,16 @@ export class ConfigLoader {
     }
 
     public createMongoModel(): void {
-        const models = new Map<string, mongoose.Model<mongoose.Document, {}>>();
+        const models = new Map<
+            string,
+            mongoose.Model<mongoose.Document, Record<string, unknown>>
+        >();
         const entity = BricksData.getEntities();
-        
-        for (const [key, e] of entity.entries()) {
-            const model = mongoose.model(e.getKey(), e.getMongoSchema());
 
-            models.set(e.getKey(), model);
+        for (const [key, e] of entity.entries()) {
+            const model = mongoose.model(key, e.getMongoSchema());
+
+            models.set(key, model);
         }
 
         BricksData.setModels(models);

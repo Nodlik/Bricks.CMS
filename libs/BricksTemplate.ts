@@ -55,7 +55,9 @@ export class BricksTemplateSingleton {
 
     private static instance: BricksTemplateSingleton;
 
-    private constructor() {}
+    private constructor() {
+        //
+    }
 
     public static getInstance(): BricksTemplateSingleton {
         if (!BricksTemplateSingleton.instance) {
@@ -65,18 +67,20 @@ export class BricksTemplateSingleton {
         return BricksTemplateSingleton.instance;
     }
 
-    public async init() {
+    public init(): void {
         const moduleTemplates: any = templates();
 
         for (const moduleName in moduleTemplates) {
             const currentTemplates: ModuleExportTemplates = moduleTemplates[moduleName];
 
             if (currentTemplates) {
-                if (currentTemplates.single)
+                if (currentTemplates.single) {
                     this.singleTemplates.set(moduleName, currentTemplates.single);
+                }
 
-                if (currentTemplates.collection)
+                if (currentTemplates.collection) {
                     this.collectionTemplates.set(moduleName, currentTemplates.collection);
+                }
 
                 if (currentTemplates.fields) {
                     for (const [enitityType, fieldType, component] of currentTemplates.fields) {
@@ -93,7 +97,7 @@ export class BricksTemplateSingleton {
     public getFieldTemplate(
         entityType: string,
         fieldType: string,
-        moduleName: string = 'default'
+        moduleName = 'default'
     ): FieldFunctionComponent {
         const component =
             this.fieldTemplates.get(moduleName + '_' + entityType + '_' + fieldType) ||
@@ -106,7 +110,7 @@ export class BricksTemplateSingleton {
         return component;
     }
 
-    public get(fieldType: string, moduleName: string = 'default'): FieldFunctionComponent {
+    public get(fieldType: string, moduleName = 'default'): FieldFunctionComponent {
         return this.getFieldTemplate('collection', fieldType, moduleName);
     }
 

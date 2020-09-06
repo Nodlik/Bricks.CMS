@@ -15,7 +15,7 @@ export abstract class BricksModule {
         return this.name;
     }
 
-    public registerType(typeName: string, mongoType: string) {
+    public registerType(typeName: string, mongoType: string): void {
         this.bricks.registerType(typeName, mongoType);
     }
 }

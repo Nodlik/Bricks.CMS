@@ -1,4 +1,3 @@
-import { promises as fsPromises } from 'fs';
 import { Bricks } from '@libs/Bricks';
 import processing from '@modules/processing';
 
@@ -12,7 +11,7 @@ export class ModuleLoader {
         this.bricks = bricks;
     }
 
-    public async parseModuleDirectory(): Promise<void> {
+    public parseModuleDirectory(): void {
         const modulesList: any = processing();
 
         for (const moduleName in modulesList) {

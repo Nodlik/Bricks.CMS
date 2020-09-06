@@ -1,5 +1,5 @@
 import { Unit } from './Unit';
-import { IConfigField, FieldAction, FieldEvents, FieldValidators } from '@libs/types/IConfigTypes';
+import { IConfigField, FieldEvents, FieldValidators } from '@libs/types/IConfigTypes';
 import BricksData from '../BricksData';
 import { IField } from '@libs/types/IBricksDocument';
 
@@ -15,7 +15,7 @@ export class Field extends Unit {
     private readonly events: FieldEvents;
     private readonly validators: FieldValidators;
 
-    private readonly options: object;
+    private readonly options: Record<string, unknown>;
 
     public constructor(item: IConfigField, template: string, entityKey: string) {
         super(item.key || entityKey);
@@ -73,7 +73,7 @@ export class Field extends Unit {
         return this.validators;
     }
 
-    public getOptions(): object {
+    public getOptions(): Record<string, unknown> {
         return this.options;
     }
 

@@ -18,12 +18,6 @@ interface RowProps {
     index: any;
 }
 
-interface ContainerProps {
-    document: IBricksDocument;
-    templates: BricksTemplateSingleton;
-    value: any;
-    sortIndex: any;
-}
 const DragHandle = SortableHandle(() => <div className="dragHandle"></div>);
 
 const Row = (props: RowProps) => {

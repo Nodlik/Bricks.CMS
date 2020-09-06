@@ -48,8 +48,11 @@ export class Entity extends Unit {
         if (!item.display.titleField) {
             this.titleField = 'id';
 
-            if (this.hasField('title')) this.titleField = 'title';
-            else if (this.hasField('name')) this.titleField = 'name';
+            if (this.hasField('title')) {
+                this.titleField = 'title';
+            } else if (this.hasField('name')) {
+                this.titleField = 'name';
+            }
         } else {
             this.titleField = item.display.titleField;
         }
