@@ -104,8 +104,8 @@ router.patch('/move/:key/:movedId/:targetId', async (req, res) => {
             if (!docs[0]) {
                 nextValue =
                     moved!.get(sortedField) < target!.get(sortedField)
-                        ? (parseFloat(target!.get(sortedField)) + 1)
-                        : (parseFloat(target!.get(sortedField)) - 1);
+                        ? parseFloat(target!.get(sortedField)) + 1
+                        : parseFloat(target!.get(sortedField)) - 1;
             } else {
                 nextValue = parseFloat(docs[0].get(sortedField));
             }

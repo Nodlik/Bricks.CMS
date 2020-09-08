@@ -32,11 +32,13 @@ export default function NewEntityPage() {
         setError('');
 
         try {
-            const res = await API.POST(`entities/${params.key}`, Object.fromEntries(fields.entries()));
-        
-            history.push(`/entity/key/${params.key}`)
-        }
-        catch (e) {
+            const res = await API.POST(
+                `entities/${params.key}`,
+                Object.fromEntries(fields.entries())
+            );
+
+            history.push(`/entity/key/${params.key}`);
+        } catch (e) {
             setError('Validation error, check data');
         }
     };

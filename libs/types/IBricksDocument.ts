@@ -1,6 +1,5 @@
 import { ENTITY_TYPE, EntityEffects } from './IConfigTypes';
 
-
 export interface IField {
     key: string;
     type: string;

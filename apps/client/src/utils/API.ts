@@ -13,7 +13,9 @@ export async function PUT(entity: string, data: object = {}) {
         body: JSON.stringify(data),
     });
 
-    if (!req.ok) throw new Error(await req.json());
+    if (!req.ok) {
+        throw new Error(await req.json());
+    }
 
     return await req.json();
 }
@@ -27,11 +29,12 @@ export async function PATCH(entity: string, data: object = {}) {
         body: JSON.stringify(data),
     });
 
-    if (!req.ok) throw new Error(await req.json());
+    if (!req.ok) {
+        throw new Error(await req.json());
+    }
 
     return await req.json();
 }
-
 
 export async function POST(entity: string, data: object = {}) {
     const req = await fetch(process.env.REACT_APP_SERVER_URL + '/' + entity, {
@@ -42,7 +45,9 @@ export async function POST(entity: string, data: object = {}) {
         body: JSON.stringify(data),
     });
 
-    if (!req.ok) throw new Error(await req.json());
+    if (!req.ok) {
+        throw new Error(await req.json());
+    }
 
     return await req.json();
 }

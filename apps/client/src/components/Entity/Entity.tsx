@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { IEntity } from '@libs/types/IBricksDocument';
-import BricksTemplate, {EntityChangeEvent} from '@libs/BricksTemplate';
+import BricksTemplate, { EntityChangeEvent } from '@libs/BricksTemplate';
 
 interface IEntityMetaProps {
     document: IEntity;
@@ -14,7 +14,11 @@ export default function Entity(props: IEntityMetaProps) {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Template document={document} templates={BricksTemplate} onChange={props.onChange}></Template>
+            <Template
+                document={document}
+                templates={BricksTemplate}
+                onChange={props.onChange}
+            ></Template>
         </Suspense>
     );
 }

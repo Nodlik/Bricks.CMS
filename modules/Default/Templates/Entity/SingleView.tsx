@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IRenderEntityProps } from '@libs/BricksTemplate';
 
-import "../default.css";
+import '../default.css';
 
 export default function SingleView(props: IRenderEntityProps) {
     const values = useRef<Map<string, any>>(new Map<string, any>());

@@ -29,7 +29,7 @@ export class ImageLoader {
             .createHash('md5')
             .update(this.imageData)
             .digest('base64')
-            .replace('/', '') 
+            .replace('/', '')
             .replace('=', '')
             .replace('\\', '');
 

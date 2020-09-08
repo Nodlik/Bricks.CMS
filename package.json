@@ -4,7 +4,9 @@
     "description": "",
     "main": "./apps/server/dist/server.js",
     "scripts": {
+        "format": "prettier --write ./**/*.ts{,x}",
         "eslint": "eslint . --ext .ts",
+
         "client:dev": "webpack-dev-server --mode development --open --hot",
         "client:build": "webpack --mode production",
         "server:prod": "ts-node ./apps/server/src/server.ts",

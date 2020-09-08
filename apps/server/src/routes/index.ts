@@ -8,9 +8,9 @@ router.get('/', (req, res) => {
     res.json({});
 });
 
-router.get('/folders',  (req, res) => {
+router.get('/folders', (req, res) => {
     const m = FolderRepository.GetAll();
-    
+
     res.json(m);
 });
 

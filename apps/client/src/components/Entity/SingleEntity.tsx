@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IBricksDocument, IEntity } from '@libs/types/IBricksDocument';
 import Entity from './Entity';
 import * as API from '../../utils/API';
@@ -13,14 +13,16 @@ export default function SingleEntity(props: IEntityMetaProps) {
 
     useEffect(() => {
         (async () => {
-            const data: IBricksDocument | null = await API.GET(`entities/${props.entity.key}/first`);
+            const data: IBricksDocument | null = await API.GET(
+                `entities/${props.entity.key}/first`
+            );
 
             setResponse(data);
         })();
     }, [props.entity]);
 
-    if (response === null) return <Redirect to={`/entity/key/${props.entity.key}/new`} />
-    else if (!response) return <div>LOADING....</div>
+    if (response === null) return <Redirect to={`/entity/key/${props.entity.key}/new`} />;
+    else if (!response) return <div>LOADING....</div>;
 
     return <Redirect to={`/entity/key/${props.entity.key}/id/${response.id}`} />;
 }
