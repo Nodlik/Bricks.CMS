@@ -18,9 +18,7 @@ module.exports = {
     },
     mode: 'development',
     optimization: {
-        minimizer: [
-            new TerserPlugin({}),
-        ],
+        minimizer: [new TerserPlugin({})],
     },
     plugins: [
         new Dotenv(),

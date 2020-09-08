@@ -10,23 +10,32 @@ import HomePage from './pages/HomePage';
 
 export default function App() {
     const [isInit, setIsInit] = useState(false);
-    useEffect(() => {
-        (async () => {
-            await BricksTemplate.init();
 
-            setIsInit(true);
-        })();
+    useEffect(() => {
+        BricksTemplate.init();
+
+        setIsInit(true);
     }, []);
 
-    if (!isInit) return <div className="bricks__loader"></div>;
+    if (!isInit) {
+        return <div className="bricks__loader"></div>;
+    }
 
     return (
-        <div className="wrapper">
+        <div className="wrapper" id="demo">
             <Router>
                 <aside className="sidebar">
                     <Sidebar></Sidebar>
                 </aside>
                 <section className="content">
+                    <div
+                        style={{
+                            width: '300px',
+                            height: '300px',
+                            outline: 'solid 100px red',
+                            boxSizing: 'content-box',
+                        }}
+                    ></div>
                     <div className="page">
                         <Switch>
                             <Route path="/entity/key/:key/id/:id">
