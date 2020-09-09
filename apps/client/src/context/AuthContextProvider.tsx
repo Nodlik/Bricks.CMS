@@ -8,14 +8,14 @@ export interface ClientAuthData {
 }
 
 export const AuthContext = React.createContext<{
-    state: ClientAuthData;
-    setState: React.Dispatch<any>;
+    authState: ClientAuthData;
+    setAuthState: React.Dispatch<any>;
 }>({
-    state: {
+    authState: {
         isAuth: false,
         data: null,
     },
-    setState: () => null,
+    setAuthState: () => null,
 });
 
 interface AuthContextProviderProps {
@@ -23,13 +23,15 @@ interface AuthContextProviderProps {
 }
 
 export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Element => {
-    const [state, setState] = useState<ClientAuthData>({
+    const [authState, setAuthState] = useState<ClientAuthData>({
         isAuth: false,
         data: null,
     });
 
     return (
-        <AuthContext.Provider value={{ state, setState }}>{props.children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ authState, setAuthState }}>
+            {props.children}
+        </AuthContext.Provider>
     );
 };
 

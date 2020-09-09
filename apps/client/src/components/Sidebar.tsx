@@ -8,7 +8,7 @@ import useAuth from '@client/hooks/auth';
 
 function Sidebar(): JSX.Element | null {
     const [folders, setFolders] = useState<IFolder[]>([]);
-    const [isAuth, user] = useAuth();
+    const { user } = useAuth();
 
     useEffect(() => {
         void (async () => {
@@ -45,7 +45,13 @@ function Sidebar(): JSX.Element | null {
         return renderFolder(folder);
     });
 
-    return <ul>{renderCode}</ul>;
+    return (
+        <div>
+            <h1 className="pageHeader">{user?.name}</h1>
+            <hr />
+            <ul>{renderCode}</ul>
+        </div>
+    );
 }
 
 export default Sidebar;

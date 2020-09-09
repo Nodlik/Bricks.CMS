@@ -2,10 +2,14 @@ import { AuthContext } from '../context/AuthContextProvider';
 import { JWTData } from '@libs/types/AppTypes';
 import { useContext } from 'react';
 
-export type AuthState = [boolean, JWTData | null];
+export type AuthState = {
+    isAuth: boolean;
+    user: JWTData | null;
+    setAuthState: React.Dispatch<any>;
+};
 
 export default function useAuth(): AuthState {
-    const { state } = useContext(AuthContext);
+    const { authState, setAuthState } = useContext(AuthContext);
 
-    return [state.isAuth, state.data];
+    return { isAuth: authState.isAuth, user: authState.data, setAuthState: setAuthState };
 }

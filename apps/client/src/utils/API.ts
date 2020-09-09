@@ -59,9 +59,14 @@ export async function Request(
               }
     );
 
+    type wtfTS = 'include'; // not good fix for TS error in fetch request "string is not "include" .... "
+
+    const credentials: wtfTS = 'include';
+
     const requestData = {
         method,
         headers: requestHeaders,
+        credentials,
     };
 
     method !== REQUEST_METHOD.GET && Object.assign(requestData, { body: JSON.stringify(params) });
@@ -82,12 +87,7 @@ export async function SendAPIRequest(
     method: REQUEST_METHOD,
     headers: Record<string, string> = {}
 ): Promise<ApiRequestResult> {
-    const req = await Request(
-        url,
-        params,
-        method,
-        Object.assign(headers, { credentials: 'include' })
-    );
+    const req = await Request(url, params, method, headers);
 
     if (!req.response.ok) {
         const data = await req.response.json();

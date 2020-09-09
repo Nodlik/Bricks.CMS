@@ -14,7 +14,7 @@ type Inputs = {
 };
 
 export default function LoginPage(): JSX.Element {
-    const { setState } = useContext(AuthContext);
+    const { setAuthState } = useContext(AuthContext);
     const [error, setError] = useState<string>('');
 
     const { register, handleSubmit, errors } = useForm<Inputs>();
@@ -24,7 +24,7 @@ export default function LoginPage(): JSX.Element {
         try {
             const { token } = await API.POST('/user/login', data);
 
-            setState({
+            setAuthState({
                 isAuth: true,
                 data: jwt_decode(token),
             });

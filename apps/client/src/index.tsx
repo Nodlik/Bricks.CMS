@@ -1,6 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
 import './index.css';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import App from './App';
+import AuthContextProvider from './context/AuthContextProvider';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+ReactDOM.render(
+    <AuthContextProvider>
+        <App />
+    </AuthContextProvider>,
+    document.getElementById('root')
+);
