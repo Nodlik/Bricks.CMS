@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
 import * as API from '../utils/API';
-import { useParams } from 'react-router-dom';
-import { IBricksDocument } from '@libs/types/IBricksDocument';
+
+import React, { useEffect, useState } from 'react';
+
 import Entity from '../components/Entity/Entity';
+import { IBricksDocument } from '@libs/types/IBricksDocument';
+import { useParams } from 'react-router-dom';
 
 interface EnitityKeyRoute {
     key: string;
     id: string;
 }
 
-export default function EditEntityPage() {
+export default function EditEntityPage(): JSX.Element {
     const [error, setError] = useState<string>('');
     const [document, setDocument] = useState<IBricksDocument>();
     const [fields, setFields] = useState<Map<string, any>>(new Map<string, any>());
@@ -17,12 +19,12 @@ export default function EditEntityPage() {
     const params: EnitityKeyRoute = useParams();
 
     useEffect(() => {
-        (async () => {
-            const data: IBricksDocument = await API.GET(`entities/${params.key}/${params.id}`);
+        void (async () => {
+            const data: IBricksDocument = await API.GET(`/entities/${params.key}/${params.id}`);
 
             setDocument(data);
         })();
-    }, [params.key]);
+    }, [params.id, params.key]);
 
     const onChange = (values: Map<string, any>) => {
         setFields(values);
@@ -33,7 +35,7 @@ export default function EditEntityPage() {
 
         try {
             const newDocument = await API.PUT(
-                `entities/${params.key}/${document!.id}`,
+                `/entities/${params.key}/${document!.id}`,
                 Object.fromEntries(fields.entries())
             );
 
@@ -44,7 +46,9 @@ export default function EditEntityPage() {
         }
     };
 
-    if (!document) return <div>Loading...</div>;
+    if (!document) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>
@@ -59,7 +63,7 @@ export default function EditEntityPage() {
                 onClick={(e) => {
                     e.preventDefault();
 
-                    save();
+                    void save();
                 }}
             >
                 SAVE

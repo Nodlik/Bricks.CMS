@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
 import * as API from '../utils/API';
-import { useParams, useHistory } from 'react-router-dom';
-import { IEntity } from '@libs/types/IBricksDocument';
+
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+
 import Entity from '../components/Entity/Entity';
+import { IEntity } from '@libs/types/IBricksDocument';
 
 interface EnitityKeyRoute {
     key: string;
 }
 
-export default function NewEntityPage() {
+export default function NewEntityPage(): JSX.Element | null {
     const [error, setError] = useState<string>('');
     const [entityMeta, setEntityMeta] = useState<IEntity>();
     const [fields, setFields] = useState<Map<string, any>>(new Map<string, any>());
@@ -17,8 +19,8 @@ export default function NewEntityPage() {
     const params: EnitityKeyRoute = useParams();
 
     useEffect(() => {
-        (async () => {
-            const data: IEntity = await API.GET(`meta/entity/${params.key}`);
+        void (async () => {
+            const data: IEntity = await API.GET(`/meta/entity/${params.key}`);
 
             setEntityMeta(data);
         })();
@@ -43,7 +45,9 @@ export default function NewEntityPage() {
         }
     };
 
-    if (!entityMeta) return null;
+    if (!entityMeta) {
+        return null;
+    }
 
     return (
         <div>
@@ -57,7 +61,7 @@ export default function NewEntityPage() {
             <button
                 onClick={(e) => {
                     e.preventDefault();
-                    save();
+                    void save();
                 }}
             >
                 SAVE

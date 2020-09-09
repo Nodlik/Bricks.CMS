@@ -11,21 +11,23 @@ code {
 }
 
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-button, input[type="submit"] {
-	padding: 10px 40px;
-	border: none;
-	background-color: #5D9AFF;
-	border-radius: 10px;
-	color: #ffffff;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+button,
+input[type='submit'] {
+    padding: 10px 40px;
+    border: none;
+    background-color: #5d9aff;
+    border-radius: 10px;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-button:active, input[type="submit"]:active {
-	padding: 12px 40px 8px 40px;
-	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
+button:active,
+input[type='submit']:active {
+    padding: 12px 40px 8px 40px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
 }
 
 .wrapper {
@@ -34,13 +36,13 @@ button:active, input[type="submit"]:active {
 }
 
 .pageHeader {
-	padding: 5px 0;
-	margin: 5px 0;
+    padding: 5px 0;
+    margin: 5px 0;
 
-	text-transform: uppercase;
-	font-size: 120%;
-	font-weight: bolder;
-	color: #444444;
+    text-transform: uppercase;
+    font-size: 120%;
+    font-weight: bolder;
+    color: #444444;
 }
 
 .sidebar {
@@ -71,63 +73,65 @@ button:active, input[type="submit"]:active {
 }
 
 .page {
-	padding: 20px 0;
+    padding: 20px 0;
 }
 
 .page ul {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .page ul li {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .formRow {
 }
 
 .formRowTitle {
-	text-transform: uppercase;
-	font-size: 80%;
-	font-weight: bolder;
-	color: #444444;
-	line-height: 2;
+    text-transform: uppercase;
+    font-size: 80%;
+    font-weight: bolder;
+    color: #444444;
+    line-height: 2;
 }
 
-input[type='text'] {
+input[type='text'],
+input[type='password'] {
     padding: 10px;
-	width: 90%;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-	border: solid 1px #eeeeee;
-	border-radius: 3px;
+    width: 90%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: solid 1px #eeeeee;
+    border-radius: 3px;
 }
 
-input[type='text']:focus {
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+input[type='text']:focus,
+input[type='password']:focus {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .fieldRow {
-	margin: 15px 0;
+    margin: 15px 0;
 }
 
 .fieldDescription {
-	font-weight: normal;
-	font-style: italic;
-	font-size: 80%;
+    font-weight: normal;
+    font-style: italic;
+    font-size: 80%;
 }
 
 .pageTitle {
-	display: flex;
-	width: 100%;
-	
-	align-items: center;
-	justify-content: flex-start;
+    display: flex;
+    width: 100%;
 
-	border-bottom: solid 1px #eeeeee;
-	padding-bottom: 10px;
+    align-items: center;
+    justify-content: flex-start;
+
+    border-bottom: solid 1px #eeeeee;
+    padding-bottom: 10px;
 }
 
 .pageTitle h1 {
-	margin-right: 30px;
+    margin-right: 30px;
 }

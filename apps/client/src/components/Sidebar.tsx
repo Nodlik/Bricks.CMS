@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
 import * as API from '../utils/API';
 
-import { Link } from 'react-router-dom';
-import { IFolder } from '@libs/types/IBricksDocument';
+import React, { useEffect, useState } from 'react';
 
-function Sidebar() {
+import { IFolder } from '@libs/types/IBricksDocument';
+import { Link } from 'react-router-dom';
+
+function Sidebar(): JSX.Element {
     const [folders, setFolders] = useState<IFolder[]>([]);
 
     useEffect(() => {
-        (async () => {
-            const data: IFolder[] = await API.GET('folders');
+        void (async () => {
+            const data: IFolder[] = await API.GET('/folders');
 
             setFolders(data);
         })();

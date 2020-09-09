@@ -7,6 +7,7 @@
     },
     "extends": [
         "eslint:recommended",
+        "plugin:react/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
@@ -35,5 +36,12 @@
         "@typescript-eslint/no-unsafe-member-access": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-non-null-assertion": "off"
+    },
+    "settings": {
+        "react": {
+            "pragma": "React",
+            "version": "detect"
+        },
+        "linkComponents": ["Hyperlink", { "name": "Link", "linkAttribute": "to" }]
     }
 }

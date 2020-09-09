@@ -27,7 +27,9 @@ export default function SingleView(props: IRenderEntityProps) {
     });
 
     useEffect(() => {
-        if (props.onChange) props.onChange(values.current);
+        if (props.onChange) {
+            props.onChange(values.current);
+        }
     }, []);
 
     return (

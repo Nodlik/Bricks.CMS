@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+
 import BricksTemplate from '@libs/BricksTemplate';
+import EditEntityPage from './pages/EditEntityPage';
+import EntityPage from './pages/EntityPage';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import NewEntityPage from './pages/NewPage';
 import Sidebar from './components/Sidebar';
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import EntityPage from './pages/EntityPage';
-import EditEntityPage from './pages/EditEntityPage';
-import NewEntityPage from './pages/NewPage';
-import HomePage from './pages/HomePage';
-
-export default function App() {
+export default function App(): JSX.Element {
     const [isInit, setIsInit] = useState(false);
 
     useEffect(() => {
@@ -28,14 +29,6 @@ export default function App() {
                     <Sidebar></Sidebar>
                 </aside>
                 <section className="content">
-                    <div
-                        style={{
-                            width: '300px',
-                            height: '300px',
-                            outline: 'solid 100px red',
-                            boxSizing: 'content-box',
-                        }}
-                    ></div>
                     <div className="page">
                         <Switch>
                             <Route path="/entity/key/:key/id/:id">
@@ -46,6 +39,9 @@ export default function App() {
                             </Route>
                             <Route path="/entity/key/:key">
                                 <EntityPage />
+                            </Route>
+                            <Route path="/user/login">
+                                <LoginPage />
                             </Route>
                             <Route path="/">
                                 <HomePage />

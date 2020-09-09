@@ -1,7 +1,9 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Folder } from './Unit/Folder';
-import { Entity } from './Unit/Entity';
 import { Bricks } from '@libs/Bricks';
+import { Entity } from './Unit/Entity';
+import { Folder } from './Unit/Folder';
+import { User } from './Unit/Essential/User';
+import { UserRepository } from './Repository/UserRepository';
+import crypto from 'crypto';
 import mongoose from 'mongoose';
 
 export type MongooseModel = mongoose.Model<mongoose.Document, Record<string, unknown>>;
@@ -13,11 +15,22 @@ export class BricksSingleton {
     private folders: Folder[] = [];
     private entities: Map<string, Entity> = new Map();
     private bricks!: Bricks;
+    private userModel: MongooseModel;
 
     private models!: MongooseModelMap;
 
+    private jwtKey: string;
+
     private constructor() {
         //
+    }
+
+    private createUserModel(): void {
+        if (this.userModel) {
+            throw new Error('User services already init');
+        }
+
+        this.userModel = mongoose.model('User', User.getMongoSchema());
     }
 
     public init(folders: Folder[], entities: Map<string, Entity>, bricks: Bricks): void {
@@ -28,6 +41,19 @@ export class BricksSingleton {
         this.bricks = bricks;
         this.folders = folders;
         this.entities = entities;
+    }
+
+    public async initAuthService(): Promise<void> {
+        this.createUserModel();
+
+        const users = await UserRepository.GetAll();
+        if (users.length === 0) {
+            await UserRepository.CreateDefault();
+        }
+    }
+
+    public getJWTSecret(): string {
+        return this.jwtKey;
     }
 
     public setModels(models: MongooseModelMap): void {
@@ -46,6 +72,10 @@ export class BricksSingleton {
         return this.bricks;
     }
 
+    public getUserModel(): MongooseModel {
+        return this.userModel;
+    }
+
     public hasModel(entityName: string): boolean {
         return this.models.has(entityName);
     }
@@ -56,6 +86,14 @@ export class BricksSingleton {
         }
 
         throw new Error(`Entity ${entityName} does not exist`);
+    }
+
+    public getGlobalSalt(): string {
+        return process.env.GLOBAL_SALT || '';
+    }
+
+    public updateJWTSecret(): void {
+        this.jwtKey = process.env.KEY || crypto.randomBytes(50).toString('hex');
     }
 
     public getEntity(key: string): Entity {

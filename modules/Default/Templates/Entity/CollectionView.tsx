@@ -79,14 +79,16 @@ interface ISortState {
     nodes: any;
 }
 
-export default function CollectionView(props: IRenderCollectionProps) {
+export default function CollectionView(props: IRenderCollectionProps): JSX.Element {
     const [collection, setCollection] = useState<IBricksCollection>(props.collection);
 
     const sortEnd = async (sortState: ISortState) => {
-        if (sortState.oldIndex === sortState.newIndex) return;
+        if (sortState.oldIndex === sortState.newIndex) {
+            return;
+        }
 
-        const movedRow = sortState.nodes[sortState.oldIndex].node.dataset['id'];
-        const targetRow = sortState.nodes[sortState.newIndex].node.dataset['id'];
+        const movedRow = String(sortState.nodes[sortState.oldIndex].node.dataset['id']);
+        const targetRow = String(sortState.nodes[sortState.newIndex].node.dataset['id']);
 
         await API.PATCH(`entities/move/${props.collection.entity.key}/${movedRow}/${targetRow}`);
 

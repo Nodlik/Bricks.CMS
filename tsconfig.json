@@ -13,10 +13,11 @@
         "paths": {
             "@libs/*": ["libs/*"],
             "@modules/*": ["modules/*"],
-            "@apps/*": ["apps/*"],
+            // "@apps/*": ["apps/*"],
             "@client/*": ["apps/client/src/*"],
+            "@server/*": ["apps/server/src/*"],
         }
     },
-    "include": ["apps", "modules", "libs"],
+    "include": ["apps", "modules", "libs", "test"],
     "exclude": ["node_modules", ".vscode"]
 }

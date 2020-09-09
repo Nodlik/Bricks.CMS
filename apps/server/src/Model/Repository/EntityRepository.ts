@@ -1,7 +1,7 @@
 import BricksData from '../BricksData';
-import mongoose from 'mongoose';
 import { BricksDocument } from '../BricksDocument';
 import { Entity } from '../Unit/Entity';
+import mongoose from 'mongoose';
 
 export class EntityRepository {
     public static async SaveDocument(

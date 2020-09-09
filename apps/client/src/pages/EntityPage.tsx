@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from 'react';
 import * as API from '../utils/API';
-import { useParams } from 'react-router-dom';
-import { IEntity } from '@libs/types/IBricksDocument';
-import { ENTITY_TYPE } from '@libs/types/IConfigTypes';
-import SingleEntity from '../components/Entity/SingleEntity';
+
+import React, { useEffect, useState } from 'react';
+
 import CollectionEntity from '../components/Entity/CollectionEntity';
+import { ENTITY_TYPE } from '@libs/types/IConfigTypes';
+import { IEntity } from '@libs/types/IBricksDocument';
+import SingleEntity from '../components/Entity/SingleEntity';
+import { useParams } from 'react-router-dom';
 
 interface EnitityKeyRoute {
     key: string;
 }
 
-export default function EntityPage() {
+export default function EntityPage(): JSX.Element | null {
     const [entityMeta, setEntityMeta] = useState<IEntity>();
     const params: EnitityKeyRoute = useParams();
 
     useEffect(() => {
-        (async () => {
-            const data: IEntity = await API.GET(`meta/entity/${params.key}`);
+        void (async () => {
+            const data: IEntity = await API.GET(`/meta/entity/${params.key}`);
 
             setEntityMeta(data);
         })();
     }, [params.key]);
 
-    if (!entityMeta) return null;
+    if (!entityMeta) {
+        return null;
+    }
 
     return entityMeta.type === ENTITY_TYPE.SINGLE ? (
         <SingleEntity entity={entityMeta}></SingleEntity>
