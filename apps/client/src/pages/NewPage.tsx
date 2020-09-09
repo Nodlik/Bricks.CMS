@@ -3,6 +3,7 @@ import * as API from '../utils/API';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { APIError } from '@client/utils/APIError';
 import Entity from '../components/Entity/Entity';
 import { IEntity } from '@libs/types/IBricksDocument';
 
@@ -41,7 +42,7 @@ export default function NewEntityPage(): JSX.Element | null {
 
             history.push(`/entity/key/${params.key}`);
         } catch (e) {
-            setError('Validation error, check data');
+            e instanceof APIError ? setError(e.message) : setError('Unhandled error');
         }
     };
 

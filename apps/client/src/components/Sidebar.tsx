@@ -4,9 +4,11 @@ import React, { useEffect, useState } from 'react';
 
 import { IFolder } from '@libs/types/IBricksDocument';
 import { Link } from 'react-router-dom';
+import useAuth from '@client/hooks/auth';
 
-function Sidebar(): JSX.Element {
+function Sidebar(): JSX.Element | null {
     const [folders, setFolders] = useState<IFolder[]>([]);
+    const [isAuth, user] = useAuth();
 
     useEffect(() => {
         void (async () => {

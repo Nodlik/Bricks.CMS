@@ -22,7 +22,7 @@ export class ResponseService extends Service {
         }
     }
 
-    public sendSuccess(data: Record<string, unknown>): void {
+    public sendSuccess(data: Record<string, unknown> | unknown): void {
         this.response.status(200).json(data);
     }
 }

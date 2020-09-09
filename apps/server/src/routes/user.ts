@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
             path: '/',
         })
             .status(200)
-            .json({});
+            .json({ token: jwtToken });
     }
 });
 

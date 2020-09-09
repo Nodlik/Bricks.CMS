@@ -1,7 +1,7 @@
 export type middlewareFunction = () => void;
 
-export type JWTData = {
+export interface JWTData {
     id: string;
     name: string;
     login: string;
-};
+}

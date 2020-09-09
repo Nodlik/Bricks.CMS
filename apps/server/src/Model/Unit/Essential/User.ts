@@ -3,6 +3,7 @@ import * as argon2 from 'argon2';
 import mongoose, { Schema } from 'mongoose';
 
 import BricksData from '../../BricksData';
+import { JWTData } from '@libs/types/AppTypes';
 
 export class User {
     protected id: string;
@@ -29,6 +30,14 @@ export class User {
 
     public getId(): string {
         return this.id;
+    }
+
+    public toJSON(): JWTData {
+        return {
+            id: this.id,
+            name: this.name,
+            login: this.login,
+        };
     }
 
     public async checkPassword(password: string): Promise<boolean> {

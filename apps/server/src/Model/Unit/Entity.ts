@@ -1,9 +1,10 @@
-import { Unit } from './Unit';
-import { IConfigEntity, ENTITY_TYPE, API_ACTION, EntityEffects } from '@libs/types/IConfigTypes';
-import { Folder } from './Folder';
-import { Field } from './Field';
+import { API_ACTION, ENTITY_TYPE, EntityEffects, IConfigEntity } from '@libs/types/IConfigTypes';
 import { Schema, SchemaDefinition } from 'mongoose';
+
+import { Field } from './Field';
+import { Folder } from './Folder';
 import { IEntity } from '@libs/types/IBricksDocument';
+import { Unit } from './Unit';
 
 export class Entity extends Unit {
     protected readonly displayName: string;

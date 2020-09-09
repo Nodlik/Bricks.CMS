@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { APIError } from './APIError';
+
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:9000';
 
 export const enum REQUEST_METHOD {
@@ -22,8 +25,9 @@ export type RequestResult = {
 
 export type ApiRequestResult = {
     result: REQUEST_RESULT;
-    data: Record<string, string>;
+    data: unknown;
     errorText: string;
+    errorCode: number;
     status: number;
 };
 
@@ -65,7 +69,7 @@ export async function Request(
     const response = await fetch(SERVER_URL + url + paramsString, requestData);
 
     return {
-        response,
+        response: response,
         url: SERVER_URL + url + paramsString,
         paramsString,
         headers: requestHeaders,
@@ -77,82 +81,70 @@ export async function SendAPIRequest(
     params: Record<string, unknown>,
     method: REQUEST_METHOD,
     headers: Record<string, string> = {}
-): Promise<Request> {
-    try {
-        const req = await Request(
-            url,
-            params,
-            method,
-            Object.assign(headers, { credentials: 'include' })
-        );
+): Promise<ApiRequestResult> {
+    const req = await Request(
+        url,
+        params,
+        method,
+        Object.assign(headers, { credentials: 'include' })
+    );
 
-        // req.response.
+    if (!req.response.ok) {
+        const data = await req.response.json();
+        if ('code' in data) {
+            return {
+                result: REQUEST_RESULT.API_ERROR,
+                data: data,
+                errorText: data['text'],
+                errorCode: parseInt(data['code']),
+                status: req.response.status,
+            };
+        } else {
+            return {
+                result: REQUEST_RESULT.SERVER_ERROR,
+                data: data,
+                errorText: 'Unhandled error',
+                errorCode: 0,
+                status: req.response.status,
+            };
+        }
     }
+
+    const data = await req.response.json();
+    return {
+        result: REQUEST_RESULT.SUCCESS,
+        data: data,
+        errorText: '',
+        errorCode: -1,
+        status: req.response.status,
+    };
+}
+
+export async function Send(
+    url: string,
+    params: Record<string, unknown>,
+    method: REQUEST_METHOD
+): Promise<any> {
+    const response = await SendAPIRequest(url, params, method);
+    if (response.result === REQUEST_RESULT.SUCCESS) {
+        return response.data;
+    }
+
+    throw new APIError({ code: response.errorCode, text: response.errorText });
 }
 
 export async function GET(url: string, params: Record<string, string> = {}): Promise<any> {
-    //Promise<Record<string, unknown>> {
-    const paramsString = Object.entries(params)
-        .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
-        .join('&');
-
-    const req = await fetch(SERVER_URL + url + paramsString, {
-        method: 'GET',
-        credentials: 'include',
-    });
-
-    if (!req.ok) {
-        throw new Error(await req.json());
-    }
-
-    return (await req.json()) as Record<string, unknown>;
+    return await Send(url, params, REQUEST_METHOD.GET);
 }
 
-export async function PUT(entity: string, data: object = {}) {
-    const req = await fetch(process.env.REACT_APP_SERVER_URL + '/' + entity, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (!req.ok) {
-        throw new Error(await req.json());
-    }
-
-    return await req.json();
+export async function PUT(url: string, data: Record<string, unknown> = {}): Promise<any> {
+    return await Send(url, data, REQUEST_METHOD.PUT);
 }
 
-export async function PATCH(entity: string, data: object = {}) {
-    const req = await fetch(process.env.REACT_APP_SERVER_URL + '/' + entity, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (!req.ok) {
-        throw new Error(await req.json());
-    }
-
-    return await req.json();
+export async function PATCH(url: string, data: Record<string, unknown> = {}): Promise<any> {
+    return await Send(url, data, REQUEST_METHOD.PATCH);
 }
 
-export async function POST(entity: string, data: object = {}) {
-    const req = await fetch(process.env.REACT_APP_SERVER_URL + '/' + entity, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-    });
-
-    if (!req.ok) {
-        throw new Error(await req.json());
-    }
-
-    return await req.json();
+export async function POST(url: string, data: Record<string, unknown> = {}): Promise<any> {
+    return await Send(url, data, REQUEST_METHOD.POST);
 }
