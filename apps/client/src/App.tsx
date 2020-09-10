@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import BricksTemplate from '@libs/BricksTemplate';
+import ConsoleLogger from './utils/ConsoleLogger';
 import EditEntityPage from './pages/EditEntityPage';
 import EntityPage from './pages/EntityPage';
 import HomePage from './pages/HomePage';
@@ -19,7 +20,7 @@ export default function App(): JSX.Element {
     const [isInit, setIsInit] = useState(false);
 
     useEffect(() => {
-        console.log('INIT');
+        ConsoleLogger.LogGreen('BRICKS:INIT');
 
         BricksTemplate.init();
         setIsInit(true);
