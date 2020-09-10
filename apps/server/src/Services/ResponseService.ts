@@ -11,7 +11,7 @@ export class ResponseService extends Service {
         const error = ERROR_LIST[errorCode];
         if (error) {
             this.response.status(error[0]).json({
-                code: error[0],
+                code: errorCode,
                 text: error[1],
             });
         } else {

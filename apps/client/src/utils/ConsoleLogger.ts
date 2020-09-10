@@ -16,4 +16,10 @@ export default class ConsoleLogger {
             this.Log(message, 'color: white; padding: 5px 10px; background-color: green;');
         }
     }
+
+    public static LogRed(message: unknown): void {
+        if (this.IsDev()) {
+            this.Log(message, 'color: white; padding: 5px 10px; background-color: red;');
+        }
+    }
 }

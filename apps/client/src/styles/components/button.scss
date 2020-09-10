@@ -1,0 +1,26 @@
+@import '../vars.scss';
+
+.button {
+    display: inline-block;
+    border: none;
+    padding: 1em 4em;
+    border-radius: 6px;
+    color: $buttonTextColor;
+    background-color: $buttonPrimary;
+    text-transform: uppercase;
+    font-weight: bolder;
+    font-size: 80%;
+
+    &:hover {
+        background-color: darken($buttonPrimary, 10%);
+    }
+
+    &:active {
+        padding: 1.15em 4em 0.85em 4em;
+    }
+
+    &.--pending {
+		pointer-events: none;
+		opacity: .8;
+    }
+}

@@ -1,10 +1,12 @@
 import * as API from '../utils/API';
 
 /* eslint-disable @typescript-eslint/unbound-method */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import useAJAX, { RequestStatus } from '@client/hooks/ajax';
 
-import { APIError } from '@client/utils/APIError';
 import { AuthContext } from '@client/context/AuthContextProvider';
+import { FormWidget } from '@client/components/UI/Form';
+import Logo from '@client/components/UI/Logo';
 import jwt_decode from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 
@@ -16,62 +18,74 @@ type Inputs = {
 export default function LoginPage(): JSX.Element {
     const { setAuthState } = useContext(AuthContext);
     const [error, setError] = useState<string>('');
+    const [requestStatus, setRequestStatus] = useState<RequestStatus>(RequestStatus.NOT_SENT);
 
     const { register, handleSubmit, errors } = useForm<Inputs>();
+    const ajax = useAJAX();
 
     const onSubmit = async (data: any) => {
-        setError('');
-        try {
-            const { token } = await API.POST('/user/login', data);
+        const response = await ajax.send(API.POST('/user/login', data));
 
+        if (response) {
             setAuthState({
                 isAuth: true,
-                data: jwt_decode(token),
+                data: jwt_decode(response.token),
             });
-
-            console.log(token);
-        } catch (e) {
-            e instanceof APIError ? setError(e.message) : setError('Unhandled error');
         }
     };
 
+    useEffect(() => {
+        setError(ajax.error?.errorText || '');
+    }, [ajax.error]);
+
+    useEffect(() => {
+        setRequestStatus(ajax.status);
+    }, [ajax.status]);
+
     return (
-        <div>
-            <h1 className="pageHeader">LOGIN</h1>
-            <div style={{ color: 'red' }}>
-                {error && <span>{error}</span>}
-                {(errors.login || errors.password) && <span>All field is required</span>}
+        <div className="loginPage">
+            <Logo />
+            <div className="loginPage__content">
+                <h1 className="pageHeader">SIGN IN</h1>
+                <form method="POST" onSubmit={handleSubmit(onSubmit)} className="formBlock">
+                    <div className="formBlock__row">
+                        <FormWidget
+                            title="Login"
+                            fieldName="login"
+                            fieldType="text"
+                            errors={errors}
+                            errorText="Enter login"
+                            validateRef={register({ required: true })}
+                        ></FormWidget>
+                    </div>
+                    <div className="formBlock__row">
+                        <FormWidget
+                            title="Password"
+                            fieldName="password"
+                            fieldType="password"
+                            errors={errors}
+                            errorText="Enter password"
+                            validateRef={register({ required: true })}
+                        ></FormWidget>
+                    </div>
+                    <div className="divider"></div>
+
+                    <div className="alertBox">
+                        {error && <div className="alert --error">{error}</div>}
+                    </div>
+
+                    <div className="formBlock__row">
+                        <input
+                            type="submit"
+                            className={
+                                'button ' +
+                                (requestStatus === RequestStatus.PENDING ? '--pending' : '')
+                            }
+                            value="Sign in"
+                        />
+                    </div>
+                </form>
             </div>
-            <form method="POST" onSubmit={handleSubmit(onSubmit)}>
-                <div className="fieldRow">
-                    <div className="formRow">
-                        <label>
-                            <span className="formRowTitle">Login: </span>
-                            <br />
-                            <input
-                                type="text"
-                                name="login"
-                                ref={register({ required: true })}
-                            ></input>
-                        </label>
-                    </div>
-                </div>
-                <div className="fieldRow">
-                    <div className="formRow">
-                        <label>
-                            <span className="formRowTitle">Password: </span>
-                            <br />
-                            <input
-                                type="password"
-                                name="password"
-                                ref={register({ required: true })}
-                            ></input>
-                        </label>
-                    </div>
-                </div>
-                <hr />
-                <input type="submit" className="button" value="Send" />
-            </form>
         </div>
     );
 }

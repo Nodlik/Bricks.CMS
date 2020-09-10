@@ -1,0 +1,16 @@
+@import '../vars.scss';
+
+.loginPage {
+    display: flex;
+    align-items: flex-start;
+
+    .loginPage__content {
+        width: 100%;
+        margin-left: 3em;
+
+        .pageHeader {
+			font-size: 200%;
+			border-bottom: solid 1px $borderColor;
+        }
+    }
+}

@@ -1,0 +1,13 @@
+@import '../vars.scss';
+
+.alert {
+	padding: 1em;
+	margin: 1em 0;
+
+	&.--error {
+		border-radius: 3px;
+		background-color: rgba($errorColor, .3);
+		color: darken($errorColor, 30%);
+		font-size: 90%;
+	}
+}

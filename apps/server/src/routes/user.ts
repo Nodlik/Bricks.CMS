@@ -7,6 +7,8 @@ import { getService } from '@server/Services/Container/ServiceContainer';
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    // setTimeout(async () => {
     const response = getService<ResponseService>('response', res);
     const auth = getService<AuthService>('auth', res);
 
@@ -23,6 +25,7 @@ router.post('/login', async (req, res) => {
             .status(200)
             .json({ token: jwtToken });
     }
+    // }, 3000);
 });
 
 export default router;
