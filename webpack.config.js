@@ -52,6 +52,7 @@ module.exports = {
         path: path.resolve(__dirname, 'apps/client/dist/'),
     },
     devServer: {
+        host: '0.0.0.0',
         contentBase: path.join(__dirname, 'apps/client/dist/'),
         port: 3000,
         historyApiFallback: true,

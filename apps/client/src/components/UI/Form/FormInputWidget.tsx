@@ -12,7 +12,7 @@ type WidgetProps = {
     validateRef: any;
 };
 
-export default function FormWidget(props: WidgetProps): JSX.Element {
+export default function FormInputWidget(props: WidgetProps): JSX.Element {
     const [isError, setIsError] = useState<boolean>(false);
 
     useEffect(() => {

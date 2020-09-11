@@ -1,10 +1,19 @@
 $maxContainerWidth: 1440px;
-$minContainerWidth: 300px;
+$minContainerWidth: 290px;
+
+$mainFontColor: #000000;
+$backgroundColor: #ffffff;
 
 $headerColor: #444444;
 $borderColor: #eeeeee;
+$lightColor: #F6F6F6;
 
 $errorColor: #ff5c5c;
 
 $buttonTextColor: #ffffff;
-$buttonPrimary: #6578ff;
+$buttonPrimary: #5D9AFF;
+
+$overlayZIndex: 50;
+$menuZIndex: 51;
+
+$animateFn: cubic-bezier(0.25, 1, 0.5, 1);

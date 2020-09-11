@@ -1,3 +1,3 @@
-import FormWidget from './FormWidget';
+import FormInputWidget from './FormInputWidget';
 
-export { FormWidget };
+export { FormInputWidget };

@@ -24,7 +24,15 @@ const app: express.Application = express();
 const port = 9000;
 
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+// app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(
+    cors({
+        credentials: true,
+        origin: (origin, callback) => {
+            callback(null, true);
+        },
+    })
+);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false }));
 

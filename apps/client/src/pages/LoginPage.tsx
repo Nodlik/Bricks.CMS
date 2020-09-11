@@ -1,11 +1,12 @@
 import * as API from '../utils/API';
 
-/* eslint-disable @typescript-eslint/unbound-method */
 import React, { useContext, useEffect } from 'react';
 import useAJAX, { RequestStatus } from '@client/hooks/ajax';
 
 import { AuthContext } from '@client/context/AuthContextProvider';
-import { FormWidget } from '@client/components/UI/Form';
+import Button from '@client/components/UI/Button';
+import { ButtonState } from '@client/components/UI/Button/Button';
+import { FormInputWidget } from '@client/components/UI/Form';
 import Logo from '@client/components/UI/Logo';
 import jwt_decode from 'jwt-decode';
 import { useForm } from 'react-hook-form';
@@ -22,6 +23,7 @@ type LoginSuccessResult = {
 export default function LoginPage(): JSX.Element {
     const { setAuthState } = useContext(AuthContext);
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const { register, handleSubmit, errors } = useForm<Inputs>();
     const { result, send } = useAJAX<LoginSuccessResult>();
 
@@ -45,24 +47,24 @@ export default function LoginPage(): JSX.Element {
                 <h1 className="pageHeader">SIGN IN</h1>
                 <form method="POST" onSubmit={handleSubmit(onSubmit)} className="formBlock">
                     <div className="formBlock__row">
-                        <FormWidget
+                        <FormInputWidget
                             title="Login"
                             fieldName="login"
                             fieldType="text"
                             errors={errors}
                             errorText="Enter login"
                             validateRef={register({ required: true })}
-                        ></FormWidget>
+                        ></FormInputWidget>
                     </div>
                     <div className="formBlock__row">
-                        <FormWidget
+                        <FormInputWidget
                             title="Password"
                             fieldName="password"
                             fieldType="password"
                             errors={errors}
                             errorText="Enter password"
                             validateRef={register({ required: true })}
-                        ></FormWidget>
+                        ></FormInputWidget>
                     </div>
                     <div className="divider"></div>
 
@@ -73,13 +75,14 @@ export default function LoginPage(): JSX.Element {
                     </div>
 
                     <div className="formBlock__row">
-                        <input
+                        <Button
                             type="submit"
-                            className={
-                                'button ' +
-                                (result.status === RequestStatus.PENDING ? '--pending' : '')
+                            state={
+                                result.status === RequestStatus.PENDING
+                                    ? ButtonState.PENDING
+                                    : ButtonState.ACTIVE
                             }
-                            value="Sign in"
+                            title="Sign in"
                         />
                     </div>
                 </form>

@@ -22,6 +22,7 @@ interface AJAXRequestResult<T> {
     response?: T;
     error?: RequestHookError;
     isError: boolean;
+    isDone: boolean;
 }
 
 interface AJAXHookResult<T> {
@@ -46,6 +47,7 @@ const createRequestReducer = <T,>() => (
                 status: RequestStatus.NOT_SENT,
                 error: undefined,
                 isError: false,
+                isDone: false,
             };
         case RequestStatus.PENDING:
             return {
@@ -53,6 +55,7 @@ const createRequestReducer = <T,>() => (
                 status: RequestStatus.PENDING,
                 error: undefined,
                 isError: false,
+                isDone: false,
             };
         case RequestStatus.ERROR:
             return {
@@ -60,6 +63,7 @@ const createRequestReducer = <T,>() => (
                 error: action.error,
                 status: RequestStatus.ERROR,
                 isError: true,
+                isDone: true,
             };
         case RequestStatus.SUCCESS:
             return {
@@ -67,6 +71,7 @@ const createRequestReducer = <T,>() => (
                 status: RequestStatus.SUCCESS,
                 error: undefined,
                 isError: false,
+                isDone: true,
             };
         default:
             ConsoleLogger.LogRed(`FRONT: Invalid request reducer state`);
@@ -83,6 +88,7 @@ export default function useAJAX<T>(): AJAXHookResult<T> {
         response: undefined,
         error: undefined,
         isError: false,
+        isDone: false,
     });
 
     useEffect(() => {

@@ -1,5 +1,7 @@
 import * as API from './utils/API';
 
+import { Content, Layout, Sidebar } from './components/UI/Layout';
+import { FoldersMenu, SidebarHeader } from './components/SideMenu';
 import React, { useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import useAJAX, { RequestStatus } from './hooks/ajax';
@@ -13,7 +15,6 @@ import { JWTData } from '@libs/types/AppTypes';
 import Loader from './components/UI/Loader';
 import LoginPage from './pages/LoginPage';
 import NewEntityPage from './pages/NewPage';
-import Sidebar from './components/Sidebar';
 import useAuth from './hooks/auth';
 
 export default function App(): JSX.Element {
@@ -27,8 +28,6 @@ export default function App(): JSX.Element {
 
         BricksTemplate.init();
         send(API.GET('/'));
-
-        setIsReady(true);
     }, [send]);
 
     useEffect(() => {
@@ -38,10 +37,10 @@ export default function App(): JSX.Element {
                 data: result.response,
             });
         }
-        if (result.status !== RequestStatus.PENDING) {
+        if (result.isDone) {
             setIsReady(true);
         }
-    }, [result.status, result.response, setAuthState]);
+    }, [result.status, result.response, result.isDone, setAuthState]);
 
     if (!isReady) {
         return <Loader />;
@@ -49,11 +48,12 @@ export default function App(): JSX.Element {
 
     const renderer = (
         <Router>
-            <aside className="sidebar">
-                <Sidebar></Sidebar>
-            </aside>
-            <section className="content">
-                <div className="page">
+            <Layout>
+                <Sidebar>
+                    <SidebarHeader></SidebarHeader>
+                    <FoldersMenu></FoldersMenu>
+                </Sidebar>
+                <Content>
                     <Switch>
                         <Route path="/entity/key/:key/id/:id">
                             <EditEntityPage />
@@ -68,9 +68,34 @@ export default function App(): JSX.Element {
                             <HomePage />
                         </Route>
                     </Switch>
-                </div>
-            </section>
+                </Content>
+            </Layout>
         </Router>
+        // <div className="app">
+        //     <Router>
+        //         <aside className="sidebar">
+        //             <Sidebar></Sidebar>
+        //         </aside>
+        //         <section className="content">
+        //             <main className="page">
+        //                 <Switch>
+        //                     <Route path="/entity/key/:key/id/:id">
+        //                         <EditEntityPage />
+        //                     </Route>
+        //                     <Route path="/entity/key/:key/new">
+        //                         <NewEntityPage />
+        //                     </Route>
+        //                     <Route path="/entity/key/:key">
+        //                         <EntityPage />
+        //                     </Route>
+        //                     <Route path="/">
+        //                         <HomePage />
+        //                     </Route>
+        //                 </Switch>
+        //             </main>
+        //         </section>
+        //     </Router>
+        // </div>
     );
 
     return <div className="container">{isAuth ? renderer : <LoginPage />}</div>;

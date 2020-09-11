@@ -1,0 +1,61 @@
+@import '../vars.scss';
+@import '../media.scss';
+
+.topSidebar {
+    &__logo {
+        text-align: center;
+
+        svg {
+            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.3));
+        }
+    }
+
+    &__user {
+        background-color: $backgroundColor;
+        margin: 0 1em 1em 1em;
+        padding: 0.5em 1em;
+        border-radius: 5px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+
+        .ts__userName {
+            display: flex;
+            align-items: center;
+
+            font-size: 80%;
+            font-weight: bold;
+            color: darken($lightColor, 60%);
+
+            svg {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.nav {
+    margin-left: -1em;
+}
+
+.nav__folder {
+    margin: 0 0 1em 1em;
+}
+
+.nav__header {
+    padding: 1em 1em 1em 1em;
+    margin: 0;
+    font-size: 70%;
+    text-transform: uppercase;
+
+    color: darken($lightColor, 90%);
+    font-weight: bold;
+    color: darken($lightColor, 60%);
+    background-color: rgba($color: $backgroundColor, $alpha: 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    transition: all 0.5s $animateFn;
+}

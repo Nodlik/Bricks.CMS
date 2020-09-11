@@ -1,0 +1,50 @@
+@import '../vars.scss';
+@import '../media.scss';
+
+.menu {
+    margin: 0;
+    padding: 0;
+
+    &__item {
+        display: block;
+        margin: 0;
+
+        > a {
+            // text-transform: uppercase;
+            font-size: 80%;
+            // font-weight: bolder;
+            color: darken($lightColor, 80%);
+
+            display: inline-block;
+            width: 100%;
+            padding: 1em 0 1em 2em;
+            transition: all 0.5s $animateFn;
+            border-right: solid 5px $lightColor;
+
+            &:hover {
+                color: darken($lightColor, 60%);
+                background-color: rgba($color: #ffffff, $alpha: 1);
+                border-right: solid 5px $buttonPrimary;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+                transition: all 0.5s $animateFn;
+            }
+        }
+
+        &.--selected {
+            color: darken($lightColor, 60%);
+            background-color: rgba($color: #ffffff, $alpha: 1);
+            border-right: solid 5px $buttonPrimary;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
+        > .menu {
+            .menu__item {
+                > a {
+                    padding: 0.9em 0 0.9em 3em !important;
+                }
+            }
+        }
+    }
+}

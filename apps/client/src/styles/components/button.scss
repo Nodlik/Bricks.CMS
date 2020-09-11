@@ -1,7 +1,13 @@
 @import '../vars.scss';
 
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .button {
-    display: inline-block;
+    display: inline-flex;
     border: none;
     padding: 1em 4em;
     border-radius: 6px;
@@ -10,6 +16,8 @@
     text-transform: uppercase;
     font-weight: bolder;
     font-size: 80%;
+
+    align-items: center;
 
     &:hover {
         background-color: darken($buttonPrimary, 10%);
@@ -20,7 +28,21 @@
     }
 
     &.--pending {
-		pointer-events: none;
-		opacity: .8;
+        pointer-events: none;
+        opacity: 0.8;
+        padding-left: 2.7em;
+
+        svg {
+            margin-right: 0.3em;
+            animation: spin 1s linear infinite;
+        }
+    }
+
+    &.--icon {
+        padding: 0.5em 1em;
+
+        &:active {
+            padding: 0.6em 1em 0.4em 1em;
+        }
     }
 }

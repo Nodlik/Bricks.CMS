@@ -1,9 +1,16 @@
-@import './styles/vars.scss';
+@import 'include-media/dist/_include-media.scss';
 
-@import './styles/pages/login-page.scss';
+@import './styles/vars.scss';
+@import './styles/media.scss';
+
+@import './styles/components/layout.scss';
+@import './styles/components/menu.scss';
 @import './styles/components/form.scss';
 @import './styles/components/button.scss';
 @import './styles/components/alert.scss';
+@import './styles/components/nav.scss';
+
+@import './styles/pages/login-page.scss';
 
 body {
     margin: 0;
@@ -11,6 +18,11 @@ body {
         'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+
+    @include media('<=phone') {
+        font-size: 14px;
+    }
 }
 
 code {
@@ -21,17 +33,22 @@ code {
     box-sizing: border-box;
 }
 
+a {
+	color: $mainFontColor;
+	text-decoration: none;
+}
+
 #root {
-	padding: 0 1em;
-	position: relative;
-	min-height: 100vh;
-	width: 100%;
+    padding: 0 1em;
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
 }
 
 .container {
-	margin: 1em auto;
-	max-width: $maxContainerWidth;
-	min-width: $minContainerWidth;
+    margin: 0 auto;
+    max-width: $maxContainerWidth;
+    min-width: $minContainerWidth;
 }
 
 .pageHeader {
@@ -45,8 +62,8 @@ code {
 }
 
 .divider {
-	display: block;
-	padding-top: 0.1em;
-	margin-bottom: 0.1em;
-	border-bottom: solid 1px $borderColor;
+    display: block;
+    padding-top: 0.1em;
+    margin-bottom: 0.1em;
+    border-bottom: solid 1px $borderColor;
 }
