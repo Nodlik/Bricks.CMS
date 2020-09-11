@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { useEffect, useReducer, useState } from 'react';
+
 import { APIError } from '@client/utils/APIError';
 import ConsoleLogger from '@client/utils/ConsoleLogger';
-import { useState } from 'react';
 
 export type AjaxSender = (response: Promise<any>) => any;
 
@@ -17,58 +17,107 @@ export const enum RequestStatus {
     ERROR = 'error',
 }
 
-export type RequestHook = {
+interface AJAXRequestResult<T> {
     status: RequestStatus;
-    send: AjaxSender;
-    response: any;
+    response?: T;
     error?: RequestHookError;
     isError: boolean;
+}
+
+interface AJAXHookResult<T> {
+    result: AJAXRequestResult<T>;
+    send: React.Dispatch<React.SetStateAction<Promise<any> | undefined>>;
+}
+
+type ReduceAction<T> = {
+    type: RequestStatus;
+    data?: T;
+    error?: RequestHookError;
 };
 
-export default function useAJAX(): RequestHook {
-    const [response, setResponse] = useState<any>();
-    const [error, setError] = useState<RequestHookError | undefined>();
-    const [isError, setIsError] = useState<boolean>(false);
-    const [status, setStatus] = useState<RequestStatus>(RequestStatus.NOT_SENT);
+const createRequestReducer = <T,>() => (
+    state: AJAXRequestResult<T>,
+    action: ReduceAction<T>
+): AJAXRequestResult<T> => {
+    switch (action.type) {
+        case RequestStatus.NOT_SENT:
+            return {
+                ...state,
+                status: RequestStatus.NOT_SENT,
+                error: undefined,
+                isError: false,
+            };
+        case RequestStatus.PENDING:
+            return {
+                ...state,
+                status: RequestStatus.PENDING,
+                error: undefined,
+                isError: false,
+            };
+        case RequestStatus.ERROR:
+            return {
+                ...state,
+                error: action.error,
+                status: RequestStatus.ERROR,
+                isError: true,
+            };
+        case RequestStatus.SUCCESS:
+            return {
+                response: action.data,
+                status: RequestStatus.SUCCESS,
+                error: undefined,
+                isError: false,
+            };
+        default:
+            ConsoleLogger.LogRed(`FRONT: Invalid request reducer state`);
+            throw new Error();
+    }
+};
 
-    const sender = async (response: Promise<any>) => {
-        setStatus(RequestStatus.PENDING);
+export default function useAJAX<T>(): AJAXHookResult<T> {
+    const [request, setRequest] = useState<Promise<any>>();
 
-        try {
-            const result = await response;
-            setResponse(result);
-            setIsError(false);
-            setError(undefined);
+    const requestReducer = createRequestReducer<T>();
+    const [state, dispatch] = useReducer(requestReducer, {
+        status: RequestStatus.NOT_SENT,
+        response: undefined,
+        error: undefined,
+        isError: false,
+    });
 
-            setStatus(RequestStatus.SUCCESS);
-
-            return result;
-        } catch (e) {
-            setIsError(true);
-
-            const currentError =
-                e instanceof APIError
-                    ? {
-                          errorCode: e.getCode(),
-                          errorText: e.message,
-                      }
-                    : {
-                          errorCode: 0,
-                          errorText: 'Unhandled error',
-                      };
-
-            setError(currentError);
-            setStatus(RequestStatus.ERROR);
-
-            ConsoleLogger.LogRed(`CODE: ${currentError.errorCode}. ${currentError.errorText}`);
+    useEffect(() => {
+        if (!request) {
+            return;
         }
-    };
+
+        dispatch({ type: RequestStatus.PENDING });
+
+        void (async () => {
+            try {
+                const result = await request;
+
+                dispatch({ type: RequestStatus.SUCCESS, data: result });
+            } catch (e) {
+                const currentError =
+                    e instanceof APIError
+                        ? {
+                              errorCode: e.getCode(),
+                              errorText: e.message,
+                          }
+                        : {
+                              errorCode: 0,
+                              errorText: 'Unhandled error',
+                          };
+
+                dispatch({ type: RequestStatus.ERROR, error: currentError });
+
+                ConsoleLogger.LogRed(`CODE: ${currentError.errorCode}. ${currentError.errorText}`);
+            }
+        })();
+    }, [request]);
 
     return {
-        status,
-        send: sender,
-        response,
-        error,
-        isError,
+        result: state,
+        send: setRequest,
     };
 }

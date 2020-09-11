@@ -1,7 +1,7 @@
 import * as API from '../utils/API';
 
 /* eslint-disable @typescript-eslint/unbound-method */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import useAJAX, { RequestStatus } from '@client/hooks/ajax';
 
 import { AuthContext } from '@client/context/AuthContextProvider';
@@ -15,32 +15,28 @@ type Inputs = {
     password: string;
 };
 
+type LoginSuccessResult = {
+    token: string;
+};
+
 export default function LoginPage(): JSX.Element {
     const { setAuthState } = useContext(AuthContext);
-    const [error, setError] = useState<string>('');
-    const [requestStatus, setRequestStatus] = useState<RequestStatus>(RequestStatus.NOT_SENT);
 
     const { register, handleSubmit, errors } = useForm<Inputs>();
-    const ajax = useAJAX();
+    const { result, send } = useAJAX<LoginSuccessResult>();
 
-    const onSubmit = async (data: any) => {
-        const response = await ajax.send(API.POST('/user/login', data));
-
-        if (response) {
-            setAuthState({
-                isAuth: true,
-                data: jwt_decode(response.token),
-            });
-        }
+    const onSubmit = (data: any) => {
+        send(API.POST('/user/login', data));
     };
 
     useEffect(() => {
-        setError(ajax.error?.errorText || '');
-    }, [ajax.error]);
-
-    useEffect(() => {
-        setRequestStatus(ajax.status);
-    }, [ajax.status]);
+        if (result.status === RequestStatus.SUCCESS) {
+            setAuthState({
+                isAuth: true,
+                data: jwt_decode(result.response!.token),
+            });
+        }
+    }, [result.status, result.response, setAuthState]);
 
     return (
         <div className="loginPage">
@@ -71,7 +67,9 @@ export default function LoginPage(): JSX.Element {
                     <div className="divider"></div>
 
                     <div className="alertBox">
-                        {error && <div className="alert --error">{error}</div>}
+                        {result.isError && (
+                            <div className="alert --error">{result.error?.errorText}</div>
+                        )}
                     </div>
 
                     <div className="formBlock__row">
@@ -79,7 +77,7 @@ export default function LoginPage(): JSX.Element {
                             type="submit"
                             className={
                                 'button ' +
-                                (requestStatus === RequestStatus.PENDING ? '--pending' : '')
+                                (result.status === RequestStatus.PENDING ? '--pending' : '')
                             }
                             value="Sign in"
                         />
