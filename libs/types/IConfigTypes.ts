@@ -24,16 +24,16 @@ export interface FieldEvents {
 }
 
 export interface FieldValidators {
-    min?: any;
-    max?: any;
-    lowercase?: any;
-    uppercase?: any;
-    trim?: any;
-    match?: any;
-    enum?: any;
-    minlength?: any;
-    maxlength?: any;
-    custom?: any[];
+    min?: unknown;
+    max?: unknown;
+    lowercase?: unknown;
+    uppercase?: unknown;
+    trim?: unknown;
+    match?: unknown;
+    enum?: unknown;
+    minlength?: unknown;
+    maxlength?: unknown;
+    custom?: unknown[];
 }
 
 export interface IConfigField {

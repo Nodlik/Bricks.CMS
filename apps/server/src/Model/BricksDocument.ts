@@ -1,5 +1,6 @@
+import { IBricksDocument, IField } from '@libs/types/IBricksDocument';
+
 import { Entity } from './Unit/Entity';
-import { IField, IBricksDocument } from '@libs/types/IBricksDocument';
 import mongoose from 'mongoose';
 
 export class BricksDocument {
@@ -34,6 +35,8 @@ export class BricksDocument {
                 template: field.getTemplate(),
                 options: field.getOptions(),
                 value: value,
+                validators: field.getValidators(),
+                mongoType: field.getMongoType()
             });
         }
     }

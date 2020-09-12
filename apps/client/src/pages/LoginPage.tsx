@@ -4,10 +4,10 @@ import React, { useContext, useEffect } from 'react';
 import useAJAX, { RequestStatus } from '@client/hooks/ajax';
 
 import { AuthContext } from '@client/context/AuthContextProvider';
-import Button from '@client/components/UI/Button';
+import { Button } from '@client/components/UI/Button';
 import { ButtonState } from '@client/components/UI/Button/Button';
 import { FormInputWidget } from '@client/components/UI/Form';
-import Logo from '@client/components/UI/Logo';
+import { Logo } from '@client/components/UI/Logo';
 import jwt_decode from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 

@@ -1,0 +1,73 @@
+@import '../vars.scss';
+@import '../media.scss';
+
+.breadcrumb {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    margin: 0;
+    padding: 0.7em;
+
+    border: solid 1px darken($lightColor, 1%);
+    border-radius: 5px;
+
+    background-color: lighten($lightColor, 1%);
+
+    * {
+        color: $headerColor;
+    }
+
+    &__item {
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        margin: 0.1em 1em 0.1em 0;
+
+        > a,
+        span {
+            padding: 0.4em 1em;
+            text-transform: uppercase;
+            font-size: 70%;
+            font-weight: bold;
+        }
+
+        > a {
+            background-color: $backgroundColor;
+            border: solid 1px darken($lightColor, 1%);
+            border-radius: 5px;
+        }
+
+        > a:hover {
+            background-color: $buttonPrimary;
+
+            color: $backgroundColor;
+            * {
+                color: $backgroundColor;
+            }
+        }
+
+        &::after {
+            content: '/';
+            display: block;
+            position: absolute;
+            color: $headerColor;
+            right: -0.8em;
+            top: 0;
+        }
+
+        &:last-child {
+            &::after {
+                display: none;
+            }
+        }
+
+        &.--current {
+            background-color: lighten($lightColor, 1%);
+            border: none;
+        }
+    }
+}

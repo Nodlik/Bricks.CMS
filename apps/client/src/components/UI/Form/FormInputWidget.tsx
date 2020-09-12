@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { FieldErrors } from 'react-hook-form';
 
@@ -9,7 +9,8 @@ type WidgetProps = {
     className?: string;
     errors?: FieldErrors<any>;
     errorText?: string;
-    validateRef: any;
+    validateRef?: any;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function FormInputWidget(props: WidgetProps): JSX.Element {
@@ -36,6 +37,7 @@ export default function FormInputWidget(props: WidgetProps): JSX.Element {
                     name={props.fieldName}
                     autoComplete={props.fieldType === 'password' ? 'on' : 'off'}
                     ref={props.validateRef}
+                    onChange={props.onChange}
                 ></input>
             </label>
             <div className="fbw__errorPlace">{isError && props.errorText}</div>

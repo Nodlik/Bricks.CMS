@@ -45,7 +45,7 @@ const postEntity = {
             display: {
                 name: 'Название публикации',
                 description: 'Описание названия публикации',
-            },
+			},
             required: true,
             validators: {
                 minlength: [2, 'Post name tooooo short'],

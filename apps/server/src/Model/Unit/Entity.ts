@@ -1,10 +1,15 @@
 import { API_ACTION, ENTITY_TYPE, EntityEffects, IConfigEntity } from '@libs/types/IConfigTypes';
-import { Schema, SchemaDefinition } from 'mongoose';
+import mongoose, { Schema, SchemaDefinition } from 'mongoose';
 
 import { Field } from './Field';
 import { Folder } from './Folder';
 import { IEntity } from '@libs/types/IBricksDocument';
+import Joigoose from 'joigoose';
 import { Unit } from './Unit';
+import { buildYup } from 'schema-to-yup';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const extendMongooose = require('mongoose-schema-jsonschema');
 
 export class Entity extends Unit {
     protected readonly displayName: string;
@@ -19,6 +24,8 @@ export class Entity extends Unit {
     protected readonly effects: EntityEffects;
 
     protected readonly parent?: Entity;
+
+    private mongodbSchema: Schema;
 
     public constructor(item: IConfigEntity, folder: Folder, parent?: Entity) {
         super(item.key);
@@ -60,41 +67,11 @@ export class Entity extends Unit {
     }
 
     public getMongoSchema(): Schema {
-        const filedsDescription: SchemaDefinition = {};
-
-        for (const field of this.fields) {
-            const schema: any = {
-                type: field.getMongoType(),
-                required: field.required(),
-            };
-
-            for (const [name, validator] of Object.entries(field.getValidators())) {
-                if (name !== 'custom') {
-                    schema[name] = validator;
-                } else {
-                    schema['validate'] = validator;
-                }
-            }
-
-            filedsDescription[field.getKey()] = schema;
+        if (!this.mongodbSchema) {
+            this.mongodbSchema = this.createMongoSchema();
         }
 
-        if (this.parent) {
-            filedsDescription[this.parent.getKey()] = {
-                type: Schema.Types.ObjectId,
-                ref: this.parent.getKey(),
-                required: true,
-            };
-        }
-
-        if (this.effects.sortable) {
-            filedsDescription[this.effects.sortable] = {
-                type: 'Number',
-                required: true,
-            };
-        }
-
-        return new Schema(filedsDescription);
+        return this.mongodbSchema;
     }
 
     public getApiAction(): string[] {
@@ -161,5 +138,43 @@ export class Entity extends Unit {
             titleField: this.titleField,
             effects: this.effects,
         };
+    }
+
+    private createMongoSchema(): Schema {
+        const filedsDescription: SchemaDefinition = {};
+
+        for (const field of this.fields) {
+            const schema: any = {
+                type: field.getMongoType(),
+                required: field.required(),
+            };
+
+            for (const [name, validator] of Object.entries(field.getValidators())) {
+                if (name !== 'custom') {
+                    schema[name] = validator;
+                } else {
+                    schema['validate'] = validator;
+                }
+            }
+
+            filedsDescription[field.getKey()] = schema;
+        }
+
+        if (this.parent) {
+            filedsDescription[this.parent.getKey()] = {
+                type: Schema.Types.ObjectId,
+                ref: this.parent.getKey(),
+                required: true,
+            };
+        }
+
+        if (this.effects.sortable) {
+            filedsDescription[this.effects.sortable] = {
+                type: 'Number',
+                required: true,
+            };
+        }
+
+        return new Schema(filedsDescription);
     }
 }

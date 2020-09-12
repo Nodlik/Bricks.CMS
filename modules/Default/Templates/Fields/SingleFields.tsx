@@ -1,31 +1,81 @@
-import React, { useState } from 'react';
-import { Editor } from 'react-draft-wysiwyg';
-import { IRenderFieldProps } from '@libs/BricksTemplate';
-import { EditorState, ContentState, convertFromHTML, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-export function TextInput(props: IRenderFieldProps) {
+import * as yup from 'yup';
+
+import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import ConsoleLogger from '@client/utils/ConsoleLogger';
+import { Editor } from 'react-draft-wysiwyg';
+import { FormInputWidget } from '@client/components/UI/Form';
+import { IRenderFieldProps } from '@libs/BricksTemplate';
+import { MongooseToYup } from '@libs/utils/MongoseToYup/MongoseToYup';
+import draftToHtml from 'draftjs-to-html';
+
+export function TextInput(props: IRenderFieldProps): JSX.Element {
+    const field = props.field;
+
+    // const validator = useCallback(() => {
+    //     const converter = new MongooseToYup();
+
+    //     let schema = converter.getYupSchema(field.mongoType);
+    //     if (schema) {
+    //         for (const [rule, value] of Object.entries(field.validators)) {
+    //             const method = converter.addYupMethod(schema, rule, value);
+    //             if (method) {
+    //                 schema = method;
+    //             }
+    //         }
+
+    //         // const data: Record<string, yup.Schema<unknown>> = {};
+    //         // data[field.key] = schema;
+
+    //         return schema; //yup.object().shape(data);
+    //     }
+
+    //     return null;
+    // }, [field]);
+
+    // console.log(validator());
+
     return (
-        <div className="formRow">
-            <label>
-                <span className="formRowTitle">{props.field.displayName}</span>: <br />
-                <input
-                    type="text"
-                    readOnly={props.field.readonly}
-                    required={props.field.required}
-                    defaultValue={props.field.value}
-                    onChange={(e) => {
-                        if (props.onChange) {
-                            props.onChange(props.field.key, e.target.value);
-                        }
-                    }}
-                />
-                <br />
-                <span className="fieldDescription">{props.field.description}</span>
-            </label>
-        </div>
+        <FormInputWidget
+            title={props.field.displayName}
+            fieldName={props.field.key}
+            fieldType="text"
+            onChange={async (e) => {
+                // const v = validator();
+                // try {
+                //     const validateResult = await v?.validate(e.target.value);
+                //     ConsoleLogger.LogGreen('good');
+                // } catch (e) {
+                //     if (e instanceof yup.ValidationError) {
+                //         ConsoleLogger.LogRed(e.message);
+                //     }
+                // }
+            }}
+            // errors={errors}
+            // errorText="Enter login"
+            // validateRef={register({ required: true })}
+        ></FormInputWidget>
+        // <div className="formRow">
+        //     <label>
+        //         <span className="formRowTitle">{props.field.displayName}</span>: <br />
+        //         <input
+        //             type="text"
+        //             readOnly={props.field.readonly}
+        //             required={props.field.required}
+        //             defaultValue={props.field.value}
+        //             onChange={(e) => {
+        //                 if (props.onChange) {
+        //                     props.onChange(props.field.key, e.target.value);
+        //                 }
+        //             }}
+        //         />
+        //         <br />
+        //         <span className="fieldDescription">{props.field.description}</span>
+        //     </label>
+        // </div>
     );
 }
 

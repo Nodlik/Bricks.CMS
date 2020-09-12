@@ -34,7 +34,19 @@ const phoneEntity = {
 			display: {
 				name: 'Контактный телефон',
 				description: 'Отображается в контактах'
-			}
+			},
+            validators: {
+                minlength: [2, 'Name name tooooo short'],
+                maxlength: [12, 'Name name tooooo long'],
+                custom: [
+                    {
+                        validator: function (v) {
+                            return v === 'test';
+                        },
+                        message: (props) => `${props.value} is not a VALUEEE! PRINT TESTTTT!`,
+                    },
+                ],
+            },
 		},
 		{
 			key: "formatted_phone",

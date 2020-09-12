@@ -12,7 +12,7 @@ import EditEntityPage from './pages/EditEntityPage';
 import EntityPage from './pages/EntityPage';
 import HomePage from './pages/HomePage';
 import { JWTData } from '@libs/types/AppTypes';
-import Loader from './components/UI/Loader';
+import { Loader } from './components/UI/Loader';
 import LoginPage from './pages/LoginPage';
 import NewEntityPage from './pages/NewPage';
 import useAuth from './hooks/auth';
@@ -71,31 +71,6 @@ export default function App(): JSX.Element {
                 </Content>
             </Layout>
         </Router>
-        // <div className="app">
-        //     <Router>
-        //         <aside className="sidebar">
-        //             <Sidebar></Sidebar>
-        //         </aside>
-        //         <section className="content">
-        //             <main className="page">
-        //                 <Switch>
-        //                     <Route path="/entity/key/:key/id/:id">
-        //                         <EditEntityPage />
-        //                     </Route>
-        //                     <Route path="/entity/key/:key/new">
-        //                         <NewEntityPage />
-        //                     </Route>
-        //                     <Route path="/entity/key/:key">
-        //                         <EntityPage />
-        //                     </Route>
-        //                     <Route path="/">
-        //                         <HomePage />
-        //                     </Route>
-        //                 </Switch>
-        //             </main>
-        //         </section>
-        //     </Router>
-        // </div>
     );
 
     return <div className="container">{isAuth ? renderer : <LoginPage />}</div>;

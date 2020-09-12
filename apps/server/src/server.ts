@@ -1,5 +1,7 @@
 import 'module-alias/register';
 
+import * as yup from 'yup';
+
 import mongoose, { Mongoose } from 'mongoose';
 
 import { Bricks } from '@libs/Bricks';

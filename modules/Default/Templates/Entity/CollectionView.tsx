@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { IBricksDocument, IBricksCollection } from '@libs/types/IBricksDocument';
-import { IRenderCollectionProps } from '@libs/BricksTemplate';
-import { BricksTemplateSingleton } from '@libs/BricksTemplate';
-
-import { Link } from 'react-router-dom';
-import { ENTITY_TYPE } from '@libs/types/IConfigTypes';
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import '../styles/default.scss';
 
 import * as API from '@client/utils/API';
 
-import '../default.css';
+import { IBricksCollection, IBricksDocument } from '@libs/types/IBricksDocument';
+import React, { useState } from 'react';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+
+import { BricksTemplateSingleton } from '@libs/BricksTemplate';
+import { ENTITY_TYPE } from '@libs/types/IConfigTypes';
+import { IRenderCollectionProps } from '@libs/BricksTemplate';
+import { Link } from 'react-router-dom';
 
 interface RowProps {
     document: IBricksDocument;

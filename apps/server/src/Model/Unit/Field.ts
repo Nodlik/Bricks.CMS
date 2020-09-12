@@ -1,7 +1,8 @@
-import { Unit } from './Unit';
-import { IConfigField, FieldEvents, FieldValidators } from '@libs/types/IConfigTypes';
+import { FieldEvents, FieldValidators, IConfigField } from '@libs/types/IConfigTypes';
+
 import BricksData from '../BricksData';
 import { IField } from '@libs/types/IBricksDocument';
+import { Unit } from './Unit';
 
 export class Field extends Unit {
     private readonly displayName: string;
@@ -89,6 +90,8 @@ export class Field extends Unit {
             required: this.required(),
             options: this.getOptions(),
             value: null,
+            validators: this.getValidators(),
+            mongoType: this.getMongoType(),
         };
     }
 }

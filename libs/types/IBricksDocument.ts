@@ -1,4 +1,4 @@
-import { ENTITY_TYPE, EntityEffects } from './IConfigTypes';
+import { ENTITY_TYPE, EntityEffects, FieldValidators } from './IConfigTypes';
 
 export interface IField {
     key: string;
@@ -11,6 +11,8 @@ export interface IField {
     required: boolean;
     value: any;
     options: any;
+    validators: FieldValidators;
+    mongoType: string;
 }
 
 export interface IEntity {

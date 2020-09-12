@@ -1,4 +1,4 @@
-import Logo from '../Logo';
+import { Logo } from '../Logo';
 import React from 'react';
 
 export default function Loader(): JSX.Element {

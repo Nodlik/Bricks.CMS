@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import '../styles/default.scss';
+
+import React, { useEffect, useRef } from 'react';
+
 import { IRenderEntityProps } from '@libs/BricksTemplate';
 
-import '../default.css';
-
-export default function SingleView(props: IRenderEntityProps) {
+export default function SingleView(props: IRenderEntityProps): JSX.Element {
+    const onChange = props.onChange;
     const values = useRef<Map<string, any>>(new Map<string, any>());
 
     const onFieldChange = (key: string, value: any) => {
@@ -18,7 +20,7 @@ export default function SingleView(props: IRenderEntityProps) {
 
             const Element = props.templates.getFieldTemplate('single', field.type, field.template);
             return (
-                <div key={i} className="fieldRow">
+                <div key={i} className="formBlock__row">
                     <Element field={field} onChange={onFieldChange}></Element>
                 </div>
             );
@@ -27,14 +29,10 @@ export default function SingleView(props: IRenderEntityProps) {
     });
 
     useEffect(() => {
-        if (props.onChange) {
-            props.onChange(values.current);
+        if (onChange) {
+            onChange(values.current);
         }
-    }, []);
+    }, [onChange]);
 
-    return (
-        <div>
-            <div>{FieldsRender}</div>
-        </div>
-    );
+    return <div className="singleEntity">{FieldsRender}</div>;
 }

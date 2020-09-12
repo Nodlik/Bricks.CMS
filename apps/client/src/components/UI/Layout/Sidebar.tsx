@@ -18,7 +18,7 @@ export default function Sidebar(props: SidebarProps): JSX.Element {
                     setIsClose(false);
                 }}
             ></div>
-            <IconContext.Provider value={{ size: '3em' }}>
+            <IconContext.Provider value={{ size: '3em', color: '#fff' }}>
                 <div className="sidebar__icon">
                     <button
                         className="sidebar__button"

@@ -1,0 +1,27 @@
+@import '../vars.scss';
+@import '../media.scss';
+
+.page {
+    .pageHeader {
+        > span {
+			display: inline-block;
+            font-size: 110%;
+			border-bottom: solid 0.2em $buttonPrimary;
+			padding-bottom: 0.3em;
+		}
+
+		padding-bottom: 0em;
+        margin: 1em 0;
+        border-bottom: solid 1px $borderColor;
+	}
+	
+	&__actions {
+		padding: 0.7em;
+		margin: 1em 0;
+	
+		border: solid 1px darken($lightColor, 1%);
+		border-radius: 5px;
+	
+		background-color: lighten($lightColor, 1%);
+	}
+}

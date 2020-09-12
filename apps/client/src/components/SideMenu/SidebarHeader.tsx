@@ -1,6 +1,6 @@
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
-import Logo from '../UI/Logo';
+import { Logo } from '../UI/Logo';
 import React from 'react';
 import useAuth from '@client/hooks/auth';
 
@@ -10,7 +10,7 @@ export default function SidebarHeader(): JSX.Element | null {
     return (
         <div className="topSidebar">
             <div className="topSidebar__logo">
-                <Logo />
+                <Logo hideText={true} />
             </div>
             <div className="topSidebar__user">
                 <div className="ts__userName">

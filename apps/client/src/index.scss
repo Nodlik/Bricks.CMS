@@ -9,7 +9,9 @@
 @import './styles/components/button.scss';
 @import './styles/components/alert.scss';
 @import './styles/components/nav.scss';
+@import './styles/components/breadcrumb.scss';
 
+@import './styles/pages/page.scss';
 @import './styles/pages/login-page.scss';
 
 body {
@@ -34,8 +36,8 @@ code {
 }
 
 a {
-	color: $mainFontColor;
-	text-decoration: none;
+    color: $mainFontColor;
+    text-decoration: none;
 }
 
 #root {
