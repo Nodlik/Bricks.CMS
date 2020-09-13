@@ -36,7 +36,7 @@ export class BricksDocument {
                 options: field.getOptions(),
                 value: value,
                 validators: field.getValidators(),
-                mongoType: field.getMongoType()
+                mongoType: field.getMongoType(),
             });
         }
     }

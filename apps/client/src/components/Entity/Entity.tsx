@@ -5,6 +5,7 @@ import { IEntity } from '@libs/types/IBricksDocument';
 
 interface IEntityMetaProps {
     document: IEntity;
+    isNew: boolean;
     onChange?: EntityChangeEvent;
 }
 
@@ -16,6 +17,7 @@ export default function Entity(props: IEntityMetaProps): JSX.Element {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Template
+                isNew={props.isNew}
                 document={document}
                 templates={BricksTemplate}
                 onChange={props.onChange}

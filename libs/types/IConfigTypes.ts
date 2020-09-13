@@ -6,6 +6,12 @@ export const enum ENTITY_TYPE {
     COLLECTION = 'collection',
 }
 
+export const enum VIEW_TYPE {
+    NEW = 'new',
+    EDIT = 'edit',
+    LIST = 'list',
+}
+
 export const enum API_ACTION {
     CREATE = 'create',
     FETCH = 'fetch',
@@ -23,7 +29,7 @@ export interface FieldEvents {
     beforeSave?: FieldAction;
 }
 
-export interface FieldValidators {
+export interface IFieldValidators {
     min?: unknown;
     max?: unknown;
     lowercase?: unknown;
@@ -33,7 +39,7 @@ export interface FieldValidators {
     enum?: unknown;
     minlength?: unknown;
     maxlength?: unknown;
-    custom?: unknown[];
+    custom?: any[];
 }
 
 export interface IConfigField {
@@ -43,12 +49,12 @@ export interface IConfigField {
     display: {
         name: string;
         description?: string;
-        view?: string[]; // [collection?, single?]
+        view?: VIEW_TYPE[];
     };
     readonly?: boolean;
     required?: boolean;
     events?: FieldEvents;
-    validators?: FieldValidators;
+    validators?: IFieldValidators;
     options?: Record<string, unknown>;
 }
 

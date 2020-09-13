@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { FieldErrors } from 'react-hook-form';
+import { ChangeEvent as FormChangeEvent } from '.';
 
 type WidgetProps = {
     title: string;
@@ -10,15 +11,27 @@ type WidgetProps = {
     errors?: FieldErrors<any>;
     errorText?: string;
     validateRef?: any;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    value?: string;
+    description?: string;
+    readOnly?: boolean;
+    onChange?: FormChangeEvent;
 };
 
 export default function FormInputWidget(props: WidgetProps): JSX.Element {
+    const [value, setValue] = useState<string>('');
     const [isError, setIsError] = useState<boolean>(false);
 
     useEffect(() => {
         setIsError(!!(props.errors && props.fieldName in props.errors));
     }, [props.errors, props.fieldName, props.validateRef]);
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (props.onChange) {
+            props.onChange(value, event.target.value);
+        }
+
+        setValue(event.target.value);
+    };
 
     return (
         <div
@@ -37,10 +50,13 @@ export default function FormInputWidget(props: WidgetProps): JSX.Element {
                     name={props.fieldName}
                     autoComplete={props.fieldType === 'password' ? 'on' : 'off'}
                     ref={props.validateRef}
-                    onChange={props.onChange}
+                    readOnly={props.readOnly === true}
+                    value={value}
+                    onChange={handleChange}
                 ></input>
             </label>
             <div className="fbw__errorPlace">{isError && props.errorText}</div>
+            <div className="fbw__description">{props.description}</div>
         </div>
     );
 }

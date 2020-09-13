@@ -1,43 +1,40 @@
 const nameEntity = {
-	key: "site_title",
-	type: "single",
-	display: {
-		name: 'Заголовок сайта',
+    key: 'site_title',
+    type: 'single',
+    display: {
+        name: 'Site title',
         className: 'testName',
-        style: {
-            color: 'red',
+    },
+    fields: [
+        {
+            type: 'string',
+            required: true,
+            display: {
+                name: 'Site title',
+                description: 'Title in the browser tab',
+            },
         },
-	},
-	fields: [
-		{
-			type: "string",
-			required: true,
-			display: {
-				name: 'Заголовок сайта',
-				description: 'Отображается в адресной строке'
-			}
-		}
-	]
-}
+    ],
+};
 
 const phoneEntity = {
-	key: "phone",
-	type: "single",
-	display: {
-		name: 'Контактный телефон'
-	},
-	fields: [
-		{
-			key: "phone",
-			type: "string",
-			required: true,
-			display: {
-				name: 'Контактный телефон',
-				description: 'Отображается в контактах'
-			},
+    key: 'phone',
+    type: 'single',
+    display: {
+        name: 'Contacts',
+    },
+    fields: [
+        {
+            key: 'phone',
+            type: 'string',
+            required: true,
+            display: {
+                name: 'Contact phone',
+                description: 'Displayed in the contact block',
+            },
             validators: {
-                minlength: [2, 'Name name tooooo short'],
-                maxlength: [12, 'Name name tooooo long'],
+                minlength: [2, 'Phone number tooooo short'],
+                maxlength: [12, 'Phone number tooooo long'],
                 custom: [
                     {
                         validator: function (v) {
@@ -47,31 +44,48 @@ const phoneEntity = {
                     },
                 ],
             },
-		},
-		{
-			key: "formatted_phone",
-			type: "string",
-			readonly: true,
-			display: {
-				name: 'Номер без форматирования',
-				description: 'Для звонка с сайта - создается автоматичски (не редактируемый)',
-				view: ['single']
-			},
-			events: {
-				beforeSave: (entity, data) => {
-					return entity['phone'].substring(0, 2);
-				}
-			}
-		},
-	]
-}
+        },
+        {
+            key: 'email',
+            type: 'string',
+            required: true,
+            display: {
+                name: 'Email',
+                description: 'Displayed in the contact block',
+            },
+            validators: {
+                custom: [
+                    {
+                        validator: function (v) {
+                            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+                        },
+                        message: (props) => `${props.value} is not valid email address`,
+                    },
+                ],
+            },
+        },
+        {
+            key: 'plain_phone',
+            type: 'string',
+            readonly: true,
+            display: {
+                name: 'Plain phone',
+                description: 'For a call from the site - created automatically (not editable)',
+                view: ['single'],
+            },
+            events: {
+                beforeSave: (entity, data) => {
+                    return entity['phone'].replace(/[^+\d]+/g, '');
+                },
+            },
+        },
+    ],
+};
 
 const Folder = {
-	key: 'main',
-	display: 'Основные настройки',
-	entities: [
-		nameEntity, phoneEntity
-	]
-}
+    key: 'main',
+    display: 'Main',
+    entities: [nameEntity, phoneEntity],
+};
 
 module.exports = Folder;

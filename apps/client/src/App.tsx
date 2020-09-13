@@ -2,7 +2,7 @@ import * as API from './utils/API';
 
 import { Content, Layout, Sidebar } from './components/UI/Layout';
 import { FoldersMenu, SidebarHeader } from './components/SideMenu';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import useAJAX, { RequestStatus } from './hooks/ajax';
 

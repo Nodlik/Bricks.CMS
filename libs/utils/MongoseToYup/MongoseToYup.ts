@@ -12,6 +12,8 @@ type ValidatorValue = {
     errorText: string;
 };
 
+type ErrorMessageFn = (props: Record<string, unknown>) => string;
+
 export class MongooseToYup {
     private typeConverters: Map<string, TypeConverter> = new Map();
     private validateConverters: Map<string, RuleConverter> = new Map();
@@ -83,8 +85,9 @@ export class MongooseToYup {
         yupSchema: yup.Schema<unknown>,
         methodName: string,
         customMethod: CustomValidateMethod,
-        errorMessage = ''
+        errorMessage: string | ErrorMessageFn
     ): yup.Schema<unknown> {
+        // const text = (typeof errorMessage === 'string') ? errorMessage : errorMessage();
         return (yupSchema as yup.MixedSchema<unknown>).test(methodName, errorMessage, customMethod);
     }
 
@@ -103,5 +106,12 @@ export class MongooseToYup {
         }
 
         return this.validateConverters.get(ruleName)!(yupSchema, value);
+    }
+
+    public addRequeredMethod(
+        yupSchema: yup.Schema<unknown>,
+        message = 'Field value is required'
+    ): yup.Schema<unknown> {
+        return (yupSchema as yup.MixedSchema<unknown>).required(message);
     }
 }

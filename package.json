@@ -8,7 +8,7 @@
         "prettier": "prettier --write ./**/*.ts{,x}",
         "eslint": "eslint . --ext .ts,.tsx",
         "client:dev": "webpack-dev-server --mode development --open --hot",
-        "client:build": "webpack --mode production",
+        "client:build": "webpack ",
         "server:prod": "ts-node ./apps/server/src/server.ts",
         "server:run": "node --inspect=5858 -r ts-node/register ./apps/server/src/server.ts",
         "server:build": "tsc -p ./tsconfig.server.json",
@@ -126,6 +126,7 @@
         "react-sortable-hoc": "^1.11.0",
         "schema-to-yup": "^1.10.0",
         "sharp": "^0.26.0",
+        "unused-webpack-plugin": "^2.4.0",
         "yup": "^0.29.3"
     }
 }

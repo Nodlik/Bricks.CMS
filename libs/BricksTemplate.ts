@@ -1,11 +1,11 @@
-import React from 'react';
-import { IBricksCollection, IField, IEntity } from './types/IBricksDocument';
+import { IBricksCollection, IEntity, IField } from './types/IBricksDocument';
+
 import { ENTITY_TYPE } from './types/IConfigTypes';
+import React from 'react';
+import templates from '../modules/templates';
 
 export type ChangeValueEvent = (key: string, value: any) => void;
 export type EntityChangeEvent = (values: Map<string, any>) => void;
-
-import templates from '../modules/templates';
 
 /**
  * SINGLE ENTITY (NEW, EDIT)
@@ -13,6 +13,7 @@ import templates from '../modules/templates';
 export interface IRenderEntityProps {
     document: IEntity;
     templates: BricksTemplateSingleton;
+    isNew: boolean;
     onChange?: EntityChangeEvent;
 }
 export type EntityFunctionComponent = (props: IRenderEntityProps) => React.ReactElement;

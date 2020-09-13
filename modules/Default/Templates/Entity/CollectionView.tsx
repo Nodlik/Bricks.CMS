@@ -2,12 +2,12 @@ import '../styles/default.scss';
 
 import * as API from '@client/utils/API';
 
+import { ENTITY_TYPE, VIEW_TYPE } from '@libs/types/IConfigTypes';
 import { IBricksCollection, IBricksDocument } from '@libs/types/IBricksDocument';
 import React, { useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 
 import { BricksTemplateSingleton } from '@libs/BricksTemplate';
-import { ENTITY_TYPE } from '@libs/types/IConfigTypes';
 import { IRenderCollectionProps } from '@libs/BricksTemplate';
 import { Link } from 'react-router-dom';
 
@@ -22,10 +22,7 @@ const DragHandle = SortableHandle(() => <div className="dragHandle"></div>);
 
 const Row = (props: RowProps) => {
     const FieldsRender = props.document.fields.map((field, i) => {
-        if (
-            field.view.includes(ENTITY_TYPE.COLLECTION) &&
-            field.key !== props.document.titleField
-        ) {
+        if (field.view.includes(VIEW_TYPE.LIST) && field.key !== props.document.titleField) {
             const Element = props.templates.getFieldTemplate(
                 ENTITY_TYPE.COLLECTION,
                 field.type,

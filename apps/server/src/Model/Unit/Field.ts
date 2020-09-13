@@ -1,7 +1,7 @@
-import { FieldEvents, FieldValidators, IConfigField } from '@libs/types/IConfigTypes';
+import { FieldEvents, IConfigField, IFieldValidators, VIEW_TYPE } from '@libs/types/IConfigTypes';
+import { IField, IJSONCustomValidator, IJSONFieldValidators } from '@libs/types/IBricksDocument';
 
 import BricksData from '../BricksData';
-import { IField } from '@libs/types/IBricksDocument';
 import { Unit } from './Unit';
 
 export class Field extends Unit {
@@ -12,9 +12,9 @@ export class Field extends Unit {
     private readonly template: string;
 
     private readonly type: string;
-    private readonly view: string[];
+    private readonly view: VIEW_TYPE[];
     private readonly events: FieldEvents;
-    private readonly validators: FieldValidators;
+    private readonly validators: IFieldValidators;
 
     private readonly options: Record<string, unknown>;
 
@@ -25,10 +25,14 @@ export class Field extends Unit {
         this.description = item.display.description || '';
         this.isRequired = item.required || false;
         this.isReadonly = item.readonly || false;
-        this.view = item.display.view || ['single', 'collection'];
+        this.view = item.display.view || [VIEW_TYPE.EDIT, VIEW_TYPE.LIST, VIEW_TYPE.NEW];
         this.template = item.template || template;
         this.events = item.events || {};
+
         this.validators = item.validators || {};
+        if (this.validators.custom && !Array.isArray(this.validators.custom)) {
+            this.validators.custom = [this.validators.custom];
+        }
         this.options = item.options || {};
 
         this.type = item.type;
@@ -38,7 +42,7 @@ export class Field extends Unit {
         return this.template;
     }
 
-    public getView(): string[] {
+    public getView(): VIEW_TYPE[] {
         return this.view;
     }
 
@@ -70,7 +74,7 @@ export class Field extends Unit {
         return this.events;
     }
 
-    public getValidators(): FieldValidators {
+    public getValidators(): IFieldValidators {
         return this.validators;
     }
 
@@ -90,8 +94,28 @@ export class Field extends Unit {
             required: this.required(),
             options: this.getOptions(),
             value: null,
-            validators: this.getValidators(),
+            validators: this.serializeValidators(),
             mongoType: this.getMongoType(),
         };
+    }
+
+    private serializeValidators(): IJSONFieldValidators {
+        const custom: IJSONCustomValidator[] = [];
+
+        if (this.validators.custom) {
+            for (const v of this.validators.custom) {
+                const validatorFn = v.validator.toString();
+                const messageFn = v.message.toString();
+
+                custom.push({
+                    validatorFn,
+                    messageFn,
+                });
+            }
+        }
+
+        const result = { ...this.validators, custom };
+
+        return result;
     }
 }

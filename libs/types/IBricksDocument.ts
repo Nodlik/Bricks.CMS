@@ -1,17 +1,35 @@
-import { ENTITY_TYPE, EntityEffects, FieldValidators } from './IConfigTypes';
+import { ENTITY_TYPE, EntityEffects, VIEW_TYPE } from './IConfigTypes';
+
+export interface IJSONCustomValidator {
+    validatorFn: string;
+    messageFn: string;
+}
+
+export interface IJSONFieldValidators {
+    min?: unknown;
+    max?: unknown;
+    lowercase?: unknown;
+    uppercase?: unknown;
+    trim?: unknown;
+    match?: unknown;
+    enum?: unknown;
+    minlength?: unknown;
+    maxlength?: unknown;
+    custom?: IJSONCustomValidator[];
+}
 
 export interface IField {
     key: string;
     type: string;
     displayName: string;
     description: string;
-    view: string[];
+    view: VIEW_TYPE[];
     readonly: boolean;
     template: string;
     required: boolean;
     value: any;
     options: any;
-    validators: FieldValidators;
+    validators: IJSONFieldValidators;
     mongoType: string;
 }
 

@@ -1,62 +1,32 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import * as yup from 'yup';
-
 import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import ConsoleLogger from '@client/utils/ConsoleLogger';
 import { Editor } from 'react-draft-wysiwyg';
 import { FormInputWidget } from '@client/components/UI/Form';
 import { IRenderFieldProps } from '@libs/BricksTemplate';
-import { MongooseToYup } from '@libs/utils/MongoseToYup/MongoseToYup';
 import draftToHtml from 'draftjs-to-html';
+import useYupValidator from '@client/hooks/validation';
 
 export function TextInput(props: IRenderFieldProps): JSX.Element {
     const field = props.field;
 
-    // const validator = useCallback(() => {
-    //     const converter = new MongooseToYup();
-
-    //     let schema = converter.getYupSchema(field.mongoType);
-    //     if (schema) {
-    //         for (const [rule, value] of Object.entries(field.validators)) {
-    //             const method = converter.addYupMethod(schema, rule, value);
-    //             if (method) {
-    //                 schema = method;
-    //             }
-    //         }
-
-    //         // const data: Record<string, yup.Schema<unknown>> = {};
-    //         // data[field.key] = schema;
-
-    //         return schema; //yup.object().shape(data);
-    //     }
-
-    //     return null;
-    // }, [field]);
-
-    // console.log(validator());
+    const { errors, errorText, setValue } = useYupValidator(field);
 
     return (
         <FormInputWidget
             title={props.field.displayName}
             fieldName={props.field.key}
             fieldType="text"
-            onChange={async (e) => {
-                // const v = validator();
-                // try {
-                //     const validateResult = await v?.validate(e.target.value);
-                //     ConsoleLogger.LogGreen('good');
-                // } catch (e) {
-                //     if (e instanceof yup.ValidationError) {
-                //         ConsoleLogger.LogRed(e.message);
-                //     }
-                // }
+            onChange={(old, val) => {
+                setValue(val);
             }}
-            // errors={errors}
-            // errorText="Enter login"
-            // validateRef={register({ required: true })}
+            value={props.field.value}
+            readOnly={props.field.readonly}
+            errors={errors}
+            errorText={errorText}
+            description={props.field.description}
         ></FormInputWidget>
         // <div className="formRow">
         //     <label>

@@ -80,7 +80,7 @@ export default function NewEntityPage(): JSX.Element | null {
             </h1>
 
             <div>
-                <Entity document={entityMeta} onChange={onChange} />
+                <Entity isNew={true} document={entityMeta} onChange={onChange} />
             </div>
             {/* <button
                 onClick={(e) => {

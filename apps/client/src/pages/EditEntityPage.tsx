@@ -56,7 +56,7 @@ export default function EditEntityPage(): JSX.Element {
             <div style={{ color: 'red' }}>{error}</div>
             <hr />
             <div>
-                <Entity document={document} onChange={onChange} />
+                <Entity isNew={false} document={document} onChange={onChange} />
             </div>
             <hr />
             <button
