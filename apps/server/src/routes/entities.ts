@@ -1,7 +1,13 @@
+import { BeCare, Validate } from '@server/Services/ValidateService';
+
+import BricksData from '../Model/BricksData';
+import { BricksDocument } from '@server/Model/BricksDocument';
+import { EntityRepository } from '../Model/Repository/EntityRepository';
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import express from 'express';
-import { EntityRepository } from '../Model/Repository/EntityRepository';
-import BricksData from '../Model/BricksData';
+import { string } from 'yup';
+
+require('express-async-errors');
 
 const router = express.Router();
 
@@ -33,41 +39,35 @@ router.get('/:key/first', async (req, res) => {
     res.json(item ? item.toJSON() : null);
 });
 
+/**
+ * Get entity by document id
+ */
 router.get('/:key/:id', async (req, res) => {
-    const key = req.params.key;
-    const id = req.params.id;
+    const { key, id } = Validate(
+        req.params,
+        { key: string().required(), id: string().required() },
+        res
+    );
 
-    let item = null;
-    try {
-        item = await EntityRepository.GetOneById(key, id);
-    } catch {
-        //
-    }
-
-    res.json(item ? item.toJSON() : null);
+    res.json((await EntityRepository.GetOneById(String(key), String(id))).toJSON());
 });
 
 /** NEW ENTITY */
 router.post('/:key', async (req, res) => {
-    const key = req.params.key;
+    const { key } = Validate(req.params, { key: string().required() }, res);
 
-    try {
-        res.json((await EntityRepository.New(key, req.body)).toJSON());
-    } catch (e) {
-        res.status(500).json({ error: e });
-    }
+    res.json((await EntityRepository.New(key as string, req.body)).toJSON());
 });
 
 /** EDIT ENTITY */
 router.put('/:key/:id', async (req, res) => {
-    const key = req.params.key;
-    const id = req.params.id;
+    const { key, id } = Validate(
+        req.params,
+        { key: string().required(), id: string().required() },
+        res
+    );
 
-    try {
-        res.json((await EntityRepository.Update(key, id, req.body)).toJSON());
-    } catch (e) {
-        res.status(500).json({ error: e });
-    }
+    res.json((await EntityRepository.Update(key as string, id as string, req.body)).toJSON());
 });
 
 /** MOVE ENTITY (FUUUUCK!! NOT REST(())) */

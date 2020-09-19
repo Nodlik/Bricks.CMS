@@ -3,3 +3,4 @@ package-lock.json
 /apps/client/dist
 /apps/client/public/uploads
 .env
+.vscode

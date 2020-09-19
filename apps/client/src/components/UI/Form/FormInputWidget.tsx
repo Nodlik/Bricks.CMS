@@ -18,7 +18,7 @@ type WidgetProps = {
 };
 
 export default function FormInputWidget(props: WidgetProps): JSX.Element {
-    const [value, setValue] = useState<string>('');
+    const [value, setValue] = useState<string>(props.value || '');
     const [isError, setIsError] = useState<boolean>(false);
 
     useEffect(() => {
@@ -32,6 +32,17 @@ export default function FormInputWidget(props: WidgetProps): JSX.Element {
 
         setValue(event.target.value);
     };
+
+    useEffect(() => {
+        if (props.value && props.onChange) {
+            props.onChange('', props.value);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        setValue(props.value || '');
+    }, [props.value]);
 
     return (
         <div

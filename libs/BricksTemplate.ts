@@ -4,8 +4,16 @@ import { ENTITY_TYPE } from './types/IConfigTypes';
 import React from 'react';
 import templates from '../modules/templates';
 
-export type ChangeValueEvent = (key: string, value: any) => void;
-export type EntityChangeEvent = (values: Map<string, any>) => void;
+export type FieldValidateResult = {
+    value: unknown;
+    isValid: boolean;
+};
+export type ChangeValueEvent = (key: string, value: any, isValid?: boolean) => void;
+// export type EntityChangeEvent = (values: Map<string, FieldValidateResult>) => void;
+export type EntityChangeEvent = (
+    values: Record<string, unknown> | undefined,
+    isValid: boolean
+) => void;
 
 /**
  * SINGLE ENTITY (NEW, EDIT)
@@ -14,6 +22,7 @@ export interface IRenderEntityProps {
     document: IEntity;
     templates: BricksTemplateSingleton;
     isNew: boolean;
+    defaultValue?: Map<string, FieldValidateResult>;
     onChange?: EntityChangeEvent;
 }
 export type EntityFunctionComponent = (props: IRenderEntityProps) => React.ReactElement;

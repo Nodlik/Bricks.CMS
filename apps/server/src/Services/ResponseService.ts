@@ -1,6 +1,7 @@
 import { ERROR_LIST } from '@libs/Error';
 import { Service } from './Service';
 import express from 'express';
+import { getService } from './Container/ServiceContainer';
 
 export class ResponseService extends Service {
     public constructor(request: express.Request, response: express.Response) {
@@ -20,9 +21,21 @@ export class ResponseService extends Service {
                 text: 'Unhandled error',
             });
         }
+        this.response.end();
     }
 
     public sendSuccess(data: Record<string, unknown> | unknown): void {
         this.response.status(200).json(data);
     }
+}
+
+export function SendError(errorCode: number, response: express.Response): void {
+    getService<ResponseService>('response', response).sendError(errorCode);
+}
+
+export function SendSucces(
+    data: Record<string, unknown> | unknown,
+    response: express.Response
+): void {
+    getService<ResponseService>('response', response).sendSuccess(data);
 }

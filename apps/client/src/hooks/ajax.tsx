@@ -1,12 +1,13 @@
 import { useEffect, useReducer, useState } from 'react';
 
-import { APIError } from '@client/utils/APIError';
+import { APIError } from '@libs/types/APIError';
 import ConsoleLogger from '@client/utils/ConsoleLogger';
 
 export type AjaxSender = (response: Promise<any>) => any;
 
 export type RequestHookError = {
     errorCode: number;
+    statusCode: number;
     errorText: string;
 };
 
@@ -109,10 +110,12 @@ export default function useAJAX<T>(): AJAXHookResult<T> {
                         ? {
                               errorCode: e.getCode(),
                               errorText: e.message,
+                              statusCode: e.getStatusCode(),
                           }
                         : {
                               errorCode: 0,
                               errorText: 'Unhandled error',
+                              statusCode: 500,
                           };
 
                 dispatch({ type: RequestStatus.ERROR, error: currentError });

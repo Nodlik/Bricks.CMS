@@ -1,7 +1,7 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Editor } from 'react-draft-wysiwyg';
 import { FormInputWidget } from '@client/components/UI/Form';
@@ -10,9 +10,13 @@ import draftToHtml from 'draftjs-to-html';
 import useYupValidator from '@client/hooks/validation';
 
 export function TextInput(props: IRenderFieldProps): JSX.Element {
-    const field = props.field;
+    const { result, validate } = useYupValidator(props.field);
 
-    const { errors, errorText, setValue } = useYupValidator(field);
+    useEffect(() => {
+        if (props.onChange) {
+            props.onChange(props.field.key, result.value, result.isValid);
+        }
+    }, [result.isValid, result.value, props]);
 
     return (
         <FormInputWidget
@@ -20,36 +24,18 @@ export function TextInput(props: IRenderFieldProps): JSX.Element {
             fieldName={props.field.key}
             fieldType="text"
             onChange={(old, val) => {
-                setValue(val);
+                validate(val);
             }}
             value={props.field.value}
             readOnly={props.field.readonly}
-            errors={errors}
-            errorText={errorText}
+            errors={result.errors}
+            errorText={result.errorText}
             description={props.field.description}
         ></FormInputWidget>
-        // <div className="formRow">
-        //     <label>
-        //         <span className="formRowTitle">{props.field.displayName}</span>: <br />
-        //         <input
-        //             type="text"
-        //             readOnly={props.field.readonly}
-        //             required={props.field.required}
-        //             defaultValue={props.field.value}
-        //             onChange={(e) => {
-        //                 if (props.onChange) {
-        //                     props.onChange(props.field.key, e.target.value);
-        //                 }
-        //             }}
-        //         />
-        //         <br />
-        //         <span className="fieldDescription">{props.field.description}</span>
-        //     </label>
-        // </div>
     );
 }
 
-export function MarkdownEditor(props: IRenderFieldProps) {
+export function MarkdownEditor(props: IRenderFieldProps): JSX.Element {
     const [editorState, setEditorState] = useState(
         EditorState.createWithContent(
             ContentState.createFromBlockArray(
@@ -82,7 +68,7 @@ export function MarkdownEditor(props: IRenderFieldProps) {
     );
 }
 
-export function Textarea(props: IRenderFieldProps) {
+export function Textarea(props: IRenderFieldProps): JSX.Element {
     return (
         <div>
             <label>
@@ -102,6 +88,6 @@ export function Textarea(props: IRenderFieldProps) {
     );
 }
 
-export function ParagraphString(props: IRenderFieldProps) {
+export function ParagraphString(props: IRenderFieldProps): JSX.Element {
     return <p>{props.field.value}</p>;
 }

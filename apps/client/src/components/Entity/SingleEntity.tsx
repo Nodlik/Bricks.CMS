@@ -9,7 +9,7 @@ interface IEntityMetaProps {
     entity: IEntity;
 }
 
-export default function SingleEntity(props: IEntityMetaProps): JSX.Element {
+export default function SingleEntity(props: IEntityMetaProps): JSX.Element | null {
     const [response, setResponse] = useState<IBricksDocument | null>();
 
     useEffect(() => {
@@ -25,7 +25,7 @@ export default function SingleEntity(props: IEntityMetaProps): JSX.Element {
     if (response === null) {
         return <Redirect to={`/entity/key/${props.entity.key}/new`} />;
     } else if (!response) {
-        return <div>LOADING....</div>;
+        return null;
     }
 
     return <Redirect to={`/entity/key/${props.entity.key}/id/${response.id}`} />;

@@ -1,6 +1,8 @@
 import { Bricks } from '@libs/Bricks';
+import { ERROR_CODE } from '@libs/Error';
 import { Entity } from './Unit/Entity';
 import { Folder } from './Unit/Folder';
+import { ServerError } from '@libs/types/APIError';
 import { User } from './Unit/Essential/User';
 import { UserRepository } from './Repository/UserRepository';
 import crypto from 'crypto';
@@ -99,7 +101,7 @@ export class BricksSingleton {
     public getEntity(key: string): Entity {
         const entity = this.entities.get(key);
         if (!entity) {
-            throw new Error('An entity with such a key does not exist');
+            throw new ServerError(ERROR_CODE.ENTITY_NOT_EXIST);
         }
 
         return entity;

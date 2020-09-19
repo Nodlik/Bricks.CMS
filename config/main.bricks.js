@@ -13,6 +13,9 @@ const nameEntity = {
                 name: 'Site title',
                 description: 'Title in the browser tab',
             },
+            validators: {
+                uppercase: true,
+            },
         },
     ],
 };
@@ -29,20 +32,12 @@ const phoneEntity = {
             type: 'string',
             required: true,
             display: {
-                name: 'Contact phone',
+                name: 'Phone number',
                 description: 'Displayed in the contact block',
             },
             validators: {
                 minlength: [2, 'Phone number tooooo short'],
-                maxlength: [12, 'Phone number tooooo long'],
-                custom: [
-                    {
-                        validator: function (v) {
-                            return v === 'test';
-                        },
-                        message: (props) => `${props.value} is not a VALUEEE! PRINT TESTTTT!`,
-                    },
-                ],
+                maxlength: [32, 'Phone number tooooo long'],
             },
         },
         {
@@ -57,7 +52,7 @@ const phoneEntity = {
                 custom: [
                     {
                         validator: function (v) {
-                            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+                            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,12})+$/.test(v);
                         },
                         message: (props) => `${props.value} is not valid email address`,
                     },
@@ -71,7 +66,7 @@ const phoneEntity = {
             display: {
                 name: 'Plain phone',
                 description: 'For a call from the site - created automatically (not editable)',
-                view: ['single'],
+                view: ['edit'],
             },
             events: {
                 beforeSave: (entity, data) => {

@@ -4,12 +4,9 @@ import mongoose, { Schema, SchemaDefinition } from 'mongoose';
 import { Field } from './Field';
 import { Folder } from './Folder';
 import { IEntity } from '@libs/types/IBricksDocument';
-import Joigoose from 'joigoose';
 import { Unit } from './Unit';
-import { buildYup } from 'schema-to-yup';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const extendMongooose = require('mongoose-schema-jsonschema');
 
 export class Entity extends Unit {
     protected readonly displayName: string;

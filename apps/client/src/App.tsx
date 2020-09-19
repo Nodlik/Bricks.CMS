@@ -2,7 +2,7 @@ import * as API from './utils/API';
 
 import { Content, Layout, Sidebar } from './components/UI/Layout';
 import { FoldersMenu, SidebarHeader } from './components/SideMenu';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import useAJAX, { RequestStatus } from './hooks/ajax';
 
@@ -15,13 +15,19 @@ import { JWTData } from '@libs/types/AppTypes';
 import { Loader } from './components/UI/Loader';
 import LoginPage from './pages/LoginPage';
 import NewEntityPage from './pages/NewPage';
+import Page404 from './pages/error/Page404';
 import useAuth from './hooks/auth';
+
+export type AppData = {
+    user: JWTData;
+    token: string;
+};
 
 export default function App(): JSX.Element {
     const [isReady, setIsReady] = useState(false);
 
     const { isAuth, setAuthState } = useAuth();
-    const { result, send } = useAJAX<JWTData>();
+    const { result, send } = useAJAX<AppData>();
 
     useEffect(() => {
         ConsoleLogger.LogGreen('BRICKS:INIT');
@@ -34,8 +40,11 @@ export default function App(): JSX.Element {
         if (result.status === RequestStatus.SUCCESS) {
             setAuthState({
                 isAuth: true,
-                data: result.response,
+                data: result.response?.user,
+                token: result.response?.token,
             });
+
+            API.SetGlobalHeaders({ 'CSRF-Token': result.response?.token || '' });
         }
         if (result.isDone) {
             setIsReady(true);
@@ -63,6 +72,9 @@ export default function App(): JSX.Element {
                         </Route>
                         <Route path="/entity/key/:key">
                             <EntityPage />
+                        </Route>
+                        <Route path="/404">
+                            <Page404 />
                         </Route>
                         <Route path="/">
                             <HomePage />

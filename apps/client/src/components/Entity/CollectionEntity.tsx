@@ -4,8 +4,11 @@ import React, { useEffect, useState } from 'react';
 
 import BricksTemplate from '@libs/BricksTemplate';
 import { IBricksCollection } from '@libs/types/IBricksDocument';
-import { IKetEntityProps } from '../../utils/types';
 import { Link } from 'react-router-dom';
+
+export interface IKetEntityProps {
+    entityKey: string;
+}
 
 export default function SingleEntity(props: IKetEntityProps): JSX.Element {
     const [collection, setCollection] = useState<IBricksCollection>();

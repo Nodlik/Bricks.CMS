@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { APIError } from './APIError';
-
+import { APIError } from '@libs/types/APIError';
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:9000';
 
 export const enum REQUEST_METHOD {
@@ -31,6 +30,12 @@ export type ApiRequestResult = {
     status: number;
 };
 
+let GlobalHeaders: Record<string, string> = {};
+
+export function SetGlobalHeaders(headers: Record<string, string> = {}): void {
+    GlobalHeaders = Object.assign(GlobalHeaders, headers);
+}
+
 export async function Request(
     url: string,
     params: Record<string, unknown>,
@@ -51,6 +56,7 @@ export async function Request(
             : '';
 
     const requestHeaders = Object.assign(
+        GlobalHeaders,
         headers,
         method === REQUEST_METHOD.GET
             ? {}
@@ -69,7 +75,9 @@ export async function Request(
         credentials,
     };
 
-    method !== REQUEST_METHOD.GET && Object.assign(requestData, { body: JSON.stringify(params) });
+    if (method !== REQUEST_METHOD.GET) {
+        Object.assign(requestData, { body: JSON.stringify(params) });
+    }
 
     const response = await fetch(SERVER_URL + url + paramsString, requestData);
 
@@ -123,28 +131,45 @@ export async function SendAPIRequest(
 export async function Send(
     url: string,
     params: Record<string, unknown>,
-    method: REQUEST_METHOD
+    method: REQUEST_METHOD,
+    headers: Record<string, string> = {}
 ): Promise<any> {
-    const response = await SendAPIRequest(url, params, method);
+    const response = await SendAPIRequest(url, params, method, headers);
     if (response.result === REQUEST_RESULT.SUCCESS) {
         return response.data;
     }
 
-    throw new APIError({ code: response.errorCode, text: response.errorText });
+    throw new APIError({
+        code: response.errorCode,
+        text: response.errorText,
+        statusCode: response.status,
+    });
 }
 
 export async function GET(url: string, params: Record<string, string> = {}): Promise<any> {
     return await Send(url, params, REQUEST_METHOD.GET);
 }
 
-export async function PUT(url: string, data: Record<string, unknown> = {}): Promise<any> {
-    return await Send(url, data, REQUEST_METHOD.PUT);
+export async function PUT(
+    url: string,
+    data: Record<string, unknown> = {},
+    headers: Record<string, string> = {}
+): Promise<any> {
+    return await Send(url, data, REQUEST_METHOD.PUT, headers);
 }
 
-export async function PATCH(url: string, data: Record<string, unknown> = {}): Promise<any> {
-    return await Send(url, data, REQUEST_METHOD.PATCH);
+export async function PATCH(
+    url: string,
+    data: Record<string, unknown> = {},
+    headers: Record<string, string> = {}
+): Promise<any> {
+    return await Send(url, data, REQUEST_METHOD.PATCH, headers);
 }
 
-export async function POST(url: string, data: Record<string, unknown> = {}): Promise<any> {
-    return await Send(url, data, REQUEST_METHOD.POST);
+export async function POST(
+    url: string,
+    data: Record<string, unknown> = {},
+    headers: Record<string, string> = {}
+): Promise<any> {
+    return await Send(url, data, REQUEST_METHOD.POST, headers);
 }

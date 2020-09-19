@@ -5,6 +5,7 @@ import { JWTData } from '@libs/types/AppTypes';
 export interface ClientAuthData {
     isAuth: boolean;
     data: JWTData | null;
+    token: string;
 }
 
 export const AuthContext = React.createContext<{
@@ -14,6 +15,7 @@ export const AuthContext = React.createContext<{
     authState: {
         isAuth: false,
         data: null,
+        token: '',
     },
     setAuthState: () => null,
 });
@@ -26,6 +28,7 @@ export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Elemen
     const [authState, setAuthState] = useState<ClientAuthData>({
         isAuth: false,
         data: null,
+        token: '',
     });
 
     return (

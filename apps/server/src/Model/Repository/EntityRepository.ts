@@ -1,6 +1,8 @@
 import BricksData from '../BricksData';
 import { BricksDocument } from '../BricksDocument';
+import { ERROR_CODE } from '@libs/Error';
 import { Entity } from '../Unit/Entity';
+import { ServerError } from '@libs/types/APIError';
 import mongoose from 'mongoose';
 
 export class EntityRepository {
@@ -45,7 +47,7 @@ export class EntityRepository {
         for (const field of entity.getField()) {
             if (!(field.getKey() in values)) {
                 if (field.required()) {
-                    throw new Error(`Field ${field.getKey()} is required`);
+                    throw new ServerError(ERROR_CODE.VALIDATE_ENTITY_ERROR);
                 }
 
                 row[field.getKey()] = null;
@@ -61,7 +63,14 @@ export class EntityRepository {
         const Model = BricksData.getModel(entityKey);
         const newEntity = new Model(row);
 
-        await this.SaveDocument(newEntity, entity);
+        try {
+            await this.SaveDocument(newEntity, entity);
+        } catch (e) {
+            const code =
+                e instanceof mongoose.Error.ValidationError ? ERROR_CODE.VALIDATE_ENTITY_ERROR : 0;
+
+            throw new ServerError(code);
+        }
         return this.GetOneById(entityKey, newEntity._id);
     }
 
@@ -71,23 +80,31 @@ export class EntityRepository {
         values: Record<string, unknown>
     ): Promise<BricksDocument> {
         const entity = BricksData.getEntity(entityKey);
-        const doc = await BricksData.getModel(entityKey).findById(id);
 
-        if (!doc) {
-            throw new Error(`The entity with id ${id} was not found`);
-        }
+        try {
+            const doc = await BricksData.getModel(entityKey).findById(id);
+            if (!doc) {
+                throw new ServerError(ERROR_CODE.DOCUMENT_NOT_EXIST);
+            }
 
-        for (const [key, value] of Object.entries(values)) {
-            if (entity.hasField(key)) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const field = entity.getFieldByKey(key)!;
-                doc.set(key, await BricksData.getBricks().getFieldValue(value, field));
-            } else if (key === entity.getEffects().sortable) {
-                doc.set(key, value);
+            for (const [key, value] of Object.entries(values)) {
+                if (entity.hasField(key)) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const field = entity.getFieldByKey(key)!;
+                    doc.set(key, await BricksData.getBricks().getFieldValue(value, field));
+                } else if (key === entity.getEffects().sortable) {
+                    doc.set(key, value);
+                }
+            }
+
+            await this.SaveDocument(doc, entity);
+        } catch (e) {
+            if (e instanceof ServerError) {
+                throw new ServerError(e.getCode());
+            } else {
+                throw new ServerError(ERROR_CODE.VALIDATE_ENTITY_ERROR);
             }
         }
-
-        await this.SaveDocument(doc, entity);
 
         return this.GetOneById(entityKey, id);
     }
@@ -130,11 +147,16 @@ export class EntityRepository {
 
     public static async GetOneById(entityKey: string, id: string): Promise<BricksDocument> {
         const entity = BricksData.getEntity(entityKey);
-        const doc = await BricksData.getModel(entityKey).findById(id);
-        if (!doc) {
-            throw new Error(`The entity with id ${id} was not found`);
-        }
+        try {
+            const doc = await BricksData.getModel(entityKey).findById(id);
 
-        return new BricksDocument(entity, doc);
+            if (doc !== null) {
+                return new BricksDocument(entity, doc);
+            }
+
+            throw new ServerError(ERROR_CODE.DOCUMENT_NOT_EXIST);
+        } catch (e) {
+            throw new ServerError(ERROR_CODE.DOCUMENT_NOT_EXIST);
+        }
     }
 }

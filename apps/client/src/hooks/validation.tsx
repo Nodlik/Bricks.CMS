@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-implied-eval */
 import * as yup from 'yup';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 
+import ConsoleLogger from '@client/utils/ConsoleLogger';
 import { FieldErrors } from 'react-hook-form';
 import { IField } from '@libs/types/IBricksDocument';
 import { MongooseToYup } from '@libs/utils/MongoseToYup/MongoseToYup';
@@ -10,14 +11,59 @@ import { MongooseToYup } from '@libs/utils/MongoseToYup/MongoseToYup';
 export type YupResult = {
     errors?: FieldErrors<any>;
     errorText?: string;
-    setValue: React.Dispatch<React.SetStateAction<unknown>>;
+    isValid: boolean;
+    value: unknown;
 };
 
-export default function useYupValidator(field: IField): YupResult {
+export type ValidateResult = {
+    result: YupResult;
+    validate: React.Dispatch<React.SetStateAction<unknown>>;
+};
+
+type ReduceAction = {
+    type: 'init' | 'success' | 'error';
+    value?: unknown;
+    errors?: FieldErrors<any>;
+    errorText?: string;
+};
+
+const validateReducer = (state: YupResult, action: ReduceAction): YupResult => {
+    switch (action.type) {
+        case 'init':
+            return {
+                ...state,
+                errors: undefined,
+                isValid: false,
+            };
+        case 'error':
+            return {
+                value: action.value,
+                errors: action.errors,
+                errorText: action.errorText,
+                isValid: false,
+            };
+        case 'success':
+            return {
+                value: action.value,
+                errors: undefined,
+                errorText: '',
+                isValid: true,
+            };
+        default:
+            ConsoleLogger.LogRed(`FRONT: Invalid validate reducer state`);
+            throw new Error();
+    }
+};
+
+export default function useYupValidator(field: IField): ValidateResult {
     const [value, setValue] = useState();
 
-    const [errorText, setErrorText] = useState<string>('');
-    const [errors, setErrors] = useState<FieldErrors>([]);
+    const [state, dispatch] = useReducer(validateReducer, {
+        errors: undefined,
+        errorText: '',
+        isValid: !field.required,
+        value: '',
+    });
 
     const validator = useMemo(() => {
         const converter = new MongooseToYup();
@@ -32,12 +78,17 @@ export default function useYupValidator(field: IField): YupResult {
             }
 
             if (field.validators.custom) {
-                for (const custom of field.validators.custom) {
-                    const validatorFn = new Function('return ' + custom.validatorFn);
-                    const messageFn = new Function('return ' + custom.messageFn);
+                for (let i = 0; i < field.validators.custom.length; i++) {
+                    const validatorFn = new Function(
+                        'return ' + field.validators.custom[i].validatorFn
+                    );
+                    const messageFn = new Function(
+                        'return ' + field.validators.custom[i].messageFn
+                    );
+
                     schema = converter.addYupCustomMethod(
                         schema,
-                        'custom',
+                        `custom_${i}`,
                         validatorFn(),
                         messageFn()
                     );
@@ -63,22 +114,20 @@ export default function useYupValidator(field: IField): YupResult {
             try {
                 await validator?.validate(value);
 
-                setErrorText('');
-                setErrors({});
+                dispatch({ type: 'success', value: value });
             } catch (e) {
-                if (e instanceof yup.ValidationError) {
-                    setErrorText(e.message);
-                    const err: Record<string, unknown> = {};
-                    err[field.key] = e.message;
-                    setErrors(err);
-                }
+                const message = e instanceof yup.ValidationError ? e.message : 'Unhandled error';
+
+                const err: Record<string, unknown> = {};
+                err[field.key] = message;
+
+                dispatch({ type: 'error', errorText: message, errors: err, value: value });
             }
         })();
     }, [value, validator, field]);
 
     return {
-        errors: errors,
-        errorText: errorText,
-        setValue,
+        result: state,
+        validate: setValue,
     };
 }

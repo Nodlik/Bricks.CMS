@@ -71,7 +71,7 @@ const postEntity = {
             display: {
                 name: 'Текст публикации',
                 description: 'Описание текста публикации',
-                view: ['single'],
+                view: ['new', 'edit'],
             },
             required: true,
             validators: {

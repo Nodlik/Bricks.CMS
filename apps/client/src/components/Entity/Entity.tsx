@@ -1,12 +1,13 @@
-import BricksTemplate, { EntityChangeEvent } from '@libs/BricksTemplate';
-import React, { Suspense } from 'react';
+import BricksTemplate, { EntityChangeEvent, FieldValidateResult } from '@libs/BricksTemplate';
 
 import { IEntity } from '@libs/types/IBricksDocument';
+import React from 'react';
 
 interface IEntityMetaProps {
     document: IEntity;
     isNew: boolean;
     onChange?: EntityChangeEvent;
+    defaultValue?: Map<string, FieldValidateResult>;
 }
 
 export default function Entity(props: IEntityMetaProps): JSX.Element {
@@ -15,13 +16,12 @@ export default function Entity(props: IEntityMetaProps): JSX.Element {
     const Template = BricksTemplate.getSingleTemplate(document.template);
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Template
-                isNew={props.isNew}
-                document={document}
-                templates={BricksTemplate}
-                onChange={props.onChange}
-            ></Template>
-        </Suspense>
+        <Template
+            isNew={props.isNew}
+            document={document}
+            templates={BricksTemplate}
+            defaultValue={props.defaultValue}
+            onChange={props.onChange}
+        ></Template>
     );
 }

@@ -9,6 +9,7 @@ import { ButtonState } from '@client/components/UI/Button/Button';
 import { FormInputWidget } from '@client/components/UI/Form';
 import { Logo } from '@client/components/UI/Logo';
 import jwt_decode from 'jwt-decode';
+import { useFetchRequest } from '@client/hooks/fetch';
 import { useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -25,10 +26,15 @@ export default function LoginPage(): JSX.Element {
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     const { register, handleSubmit, errors } = useForm<Inputs>();
+    const token = useFetchRequest<string>('/user/token');
     const { result, send } = useAJAX<LoginSuccessResult>();
 
     const onSubmit = (data: any) => {
-        send(API.POST('/user/login', data));
+        send(
+            API.POST('/user/login', data, {
+                'CSRF-Token': token || '',
+            })
+        );
     };
 
     useEffect(() => {

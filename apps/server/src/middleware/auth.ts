@@ -4,21 +4,18 @@ import { JWTData, middlewareFunction } from '@libs/types/AppTypes';
 
 import BricksData from '@server/Model/BricksData';
 import { ERROR_CODE } from '@libs/Error';
-import { ResponseService } from '@server/Services/ResponseService';
+import { SendError } from '@server/Services/ResponseService';
 import { UserRepository } from '@server/Model/Repository/UserRepository';
 import express from 'express';
-import { getService } from '@server/Services/Container/ServiceContainer';
 
-const LOGIN_URL = ['/user/login', '/login'];
+const LOGIN_URL = ['/user/login', '/login', '/user/token', '/token'];
 
 export default async function authMiddleware(
     request: express.Request,
     response: express.Response,
     next: middlewareFunction
 ): Promise<void> {
-    const res = getService<ResponseService>('response', response);
-
-    if (LOGIN_URL.includes(request.url)) {
+    if (LOGIN_URL.includes(request.url.replace('?', ''))) {
         next();
     } else {
         try {
@@ -34,7 +31,7 @@ export default async function authMiddleware(
 
             next();
         } catch (e) {
-            res.sendError(ERROR_CODE.AUTH_REQUIRED);
+            SendError(ERROR_CODE.AUTH_REQUIRED, response);
         }
     }
 }

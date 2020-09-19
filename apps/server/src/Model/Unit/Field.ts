@@ -99,7 +99,7 @@ export class Field extends Unit {
         };
     }
 
-    private serializeValidators(): IJSONFieldValidators {
+    public serializeValidators(): IJSONFieldValidators {
         const custom: IJSONCustomValidator[] = [];
 
         if (this.validators.custom) {
