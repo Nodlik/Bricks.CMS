@@ -1,6 +1,7 @@
 import * as API from '../utils/API';
 
 import { Breadcrumb, BreadcrumbItem } from '@client/components/UI/Breadcrumb';
+import { ButtonState, ButtonType } from '@client/components/UI/Button/Button';
 import { Link, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import useAJAX, { RequestStatus } from '@client/hooks/ajax';
@@ -9,7 +10,6 @@ import { AiTwotoneHome } from 'react-icons/ai';
 import { Alert } from '@client/components/UI/Alert';
 import { AlertState } from '@client/components/UI/Alert/Alert';
 import { Button } from '@client/components/UI/Button';
-import { ButtonState } from '@client/components/UI/Button/Button';
 import Entity from '../components/Entity/Entity';
 import { IBricksDocument } from '@libs/types/IBricksDocument';
 import { List } from 'react-content-loader';
@@ -27,6 +27,7 @@ export default function EditEntityPage(): JSX.Element {
     const [document, setDocument] = useState<IBricksDocument>();
 
     const params: EnitityKeyRoute = useParams();
+
     const currentDocument = useFetchRequest<IBricksDocument>(
         `/entities/${params.key}/${params.id}`
     );
@@ -49,13 +50,7 @@ export default function EditEntityPage(): JSX.Element {
         } else if (editEntity.result.response) {
             setDocument(editEntity.result.response);
         }
-    }, [
-        fields.isValid,
-        editEntity.result.isError,
-        editEntity.result.error,
-        editEntity.result.isDone,
-        editEntity.result.response,
-    ]);
+    }, [fields.isValid, editEntity.result]);
 
     const onChange = (values: Record<string, unknown> | undefined, isValid: boolean) => {
         fields.set(values, isValid);
@@ -105,6 +100,13 @@ export default function EditEntityPage(): JSX.Element {
                             ? ButtonState.PENDING
                             : ButtonState.ACTIVE
                     }
+                ></Button>
+                <Button
+                    title="Remove"
+                    onClick={() => {
+                        //
+                    }}
+                    buttonType={ButtonType.DANGER}
                 ></Button>
             </div>
             <Alert text={error} state={AlertState.ERROR} />

@@ -19,12 +19,13 @@ export function useFetchRequest<T>(path: string): T | undefined {
     useEffect(() => {
         if (request.result.status === RequestStatus.SUCCESS) {
             setResult(request.result.response);
-        } else if (request.result.error?.statusCode === 404) {
-            history.push('/404');
+        } else if (request.result.status === RequestStatus.ERROR) {
+            if (request.result.error?.statusCode === 404) {
+                history.push('/404');
+            } else {
+                history.push('/500');
+            }
         }
-        // else {
-
-        // }
     }, [request.result, history]);
 
     return result;

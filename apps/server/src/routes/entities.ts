@@ -1,8 +1,6 @@
-import { BeCare, Validate } from '@server/Services/ValidateService';
-
-import BricksData from '../Model/BricksData';
-import { BricksDocument } from '@server/Model/BricksDocument';
 import { EntityRepository } from '../Model/Repository/EntityRepository';
+import { SortableEffect } from '@server/Model/BricksEffect/Sortable';
+import { Validate } from '@server/Services/ValidateService';
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import express from 'express';
 import { string } from 'yup';
@@ -11,13 +9,16 @@ require('express-async-errors');
 
 const router = express.Router();
 
+/**
+ * Get all documents of the specified entity
+ */
 router.get('/:key', async (req, res) => {
-    const key = req.params.key;
+    const { key } = Validate(req.params, { key: string().required() }, res);
 
-    const meta = EntityRepository.GetEntityMeta(key);
+    const meta = EntityRepository.GetEntityMeta(key as string);
 
     try {
-        const docs = await EntityRepository.GetAll(key);
+        const docs = await EntityRepository.GetAll(key as string);
 
         res.json({
             entity: meta,
@@ -31,10 +32,13 @@ router.get('/:key', async (req, res) => {
     }
 });
 
+/**
+ * Get the first document of the specified entity
+ */
 router.get('/:key/first', async (req, res) => {
-    const key = req.params.key;
+    const { key } = Validate(req.params, { key: string().required() }, res);
 
-    const item = await EntityRepository.GetFirst(key);
+    const item = await EntityRepository.GetFirst(key as string);
 
     res.json(item ? item.toJSON() : null);
 });
@@ -52,14 +56,18 @@ router.get('/:key/:id', async (req, res) => {
     res.json((await EntityRepository.GetOneById(String(key), String(id))).toJSON());
 });
 
-/** NEW ENTITY */
+/**
+ * Create new document by entity key
+ */
 router.post('/:key', async (req, res) => {
     const { key } = Validate(req.params, { key: string().required() }, res);
 
     res.json((await EntityRepository.New(key as string, req.body)).toJSON());
 });
 
-/** EDIT ENTITY */
+/**
+ * Edit document by entity key
+ */
 router.put('/:key/:id', async (req, res) => {
     const { key, id } = Validate(
         req.params,
@@ -70,54 +78,19 @@ router.put('/:key/:id', async (req, res) => {
     res.json((await EntityRepository.Update(key as string, id as string, req.body)).toJSON());
 });
 
-/** MOVE ENTITY (FUUUUCK!! NOT REST(())) */
+/**
+ * Move and shift documents
+ */
 router.patch('/move/:key/:movedId/:targetId', async (req, res) => {
-    const key = req.params.key;
-    const movedId = req.params.movedId;
-    const targetId = req.params.targetId;
+    const { key, movedId, targetId } = Validate(
+        req.params,
+        { key: string().required(), movedId: string().required(), targetId: string().required() },
+        res
+    );
 
-    try {
-        const entity = BricksData.getEntity(key);
+    await SortableEffect.MoveAndShift(key, movedId, targetId);
 
-        if (entity.getEffects().sortable) {
-            const sortedField = entity.getEffects().sortable!;
-
-            const moved = await BricksData.getModel(key).findById(movedId);
-            const target = await BricksData.getModel(key).findById(targetId);
-
-            const Model = BricksData.getModel(key);
-
-            const docs =
-                moved!.get(sortedField) < target!.get(sortedField)
-                    ? await Model.find(
-                          Object.fromEntries([[sortedField, { $gt: target!.get(sortedField) }]])
-                      )
-                          .sort(`+${sortedField}`)
-                          .limit(1)
-                    : await Model.find(
-                          Object.fromEntries([[sortedField, { $lt: target!.get(sortedField) }]])
-                      )
-                          .sort(`-${sortedField}`)
-                          .limit(1);
-
-            let nextValue = 0;
-            if (!docs[0]) {
-                nextValue =
-                    moved!.get(sortedField) < target!.get(sortedField)
-                        ? parseFloat(target!.get(sortedField)) + 1
-                        : parseFloat(target!.get(sortedField)) - 1;
-            } else {
-                nextValue = parseFloat(docs[0].get(sortedField));
-            }
-
-            moved!.set(sortedField, (parseFloat(target!.get(sortedField)) + nextValue) / 2);
-            await moved!.save();
-        }
-
-        res.json({});
-    } catch (e) {
-        res.status(500).json({ error: e });
-    }
+    res.json(true);
 });
 
 export default router;

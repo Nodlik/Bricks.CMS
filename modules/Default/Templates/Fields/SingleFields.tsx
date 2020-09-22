@@ -36,6 +36,8 @@ export function TextInput(props: IRenderFieldProps): JSX.Element {
 }
 
 export function MarkdownEditor(props: IRenderFieldProps): JSX.Element {
+    const { result, validate } = useYupValidator(props.field);
+
     const [editorState, setEditorState] = useState(
         EditorState.createWithContent(
             ContentState.createFromBlockArray(
@@ -44,10 +46,16 @@ export function MarkdownEditor(props: IRenderFieldProps): JSX.Element {
         )
     );
 
+    useEffect(() => {
+        if (props.onChange) {
+            props.onChange(props.field.key, result.value, result.isValid);
+        }
+    }, [result.isValid, result.value, props]);
+
     return (
-        <div className="formRow">
+        <div className={'formBlock__widget' + (result.errors ? ' --error' : '')}>
             <label>
-                <span className="formRowTitle">{props.field.displayName}</span>: <br />
+                <span className="fbw__title">{props.field.displayName}</span>: <br />
                 <Editor
                     defaultEditorState={editorState}
                     editorClassName="markdown"
@@ -57,7 +65,8 @@ export function MarkdownEditor(props: IRenderFieldProps): JSX.Element {
                             const rawContentState = convertToRaw(editorState.getCurrentContent());
 
                             const markup = draftToHtml(rawContentState);
-                            props.onChange(props.field.key, markup);
+
+                            validate(markup !== '<p></p>' ? markup : '');
                         }
                     }}
                 >

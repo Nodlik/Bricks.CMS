@@ -1,5 +1,5 @@
 import { API_ACTION, ENTITY_TYPE, EntityEffects, IConfigEntity } from '@libs/types/IConfigTypes';
-import mongoose, { Schema, SchemaDefinition } from 'mongoose';
+import { Schema, SchemaDefinition } from 'mongoose';
 
 import { Field } from './Field';
 import { Folder } from './Folder';

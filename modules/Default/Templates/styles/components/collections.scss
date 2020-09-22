@@ -1,0 +1,88 @@
+@import '../vars.scss';
+
+.collection {
+}
+
+.collectionHeader {
+    border-left: solid 3px $secondColor;
+    padding-left: 1em;
+
+    &__title {
+        text-transform: uppercase;
+        font-size: 80%;
+        color: $headerColor;
+        margin: 0;
+        padding: 0;
+    }
+
+    &__subtext {
+        color: $headerColor;
+        font-size: 70%;
+    }
+}
+
+.collectionList {
+    margin: 0;
+	padding: 0;
+	
+	&.--disabled {
+		opacity: 0.5;
+	}
+}
+
+.cl__dragHandle {
+    cursor: pointer;
+}
+
+.cl__row {
+    background-color: $lightColor;
+    margin: 1em 0;
+    padding: 1em;
+
+	display: flex;
+	
+    &:hover {
+		background-color: darken($lightColor, 1%);
+	}
+
+    &-content {
+        padding-left: 0.5em;
+        flex: 1;
+    }
+
+    &-titleLeft {
+        label {
+            padding: 3px;
+            background-color: $backgroundColor;
+            margin-right: 5px;
+            margin-bottom: 3px;
+        }
+    }
+
+    &-title {
+        padding-bottom: 0.3em;
+        margin-bottom: 0.3em;
+        display: flex;
+        justify-content: space-between;
+
+        border-bottom: solid 1px darken($lightColor, 3%);
+
+        &__link {
+            font-size: 90%;
+        }
+
+        &__delete {
+            font-size: 60%;
+			padding: 0.5em;
+			
+			&:active {
+				padding: 0.6em 0.5em 0.4em 0.5em;
+			}
+        }
+    }
+
+    &.--selected {
+		border-left: solid 5px $secondColor;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+}

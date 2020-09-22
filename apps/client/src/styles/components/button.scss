@@ -12,19 +12,34 @@
     padding: 1em 4em;
     border-radius: 6px;
     color: $buttonTextColor;
-    background-color: $buttonPrimary;
     text-transform: uppercase;
     font-weight: bolder;
     font-size: 80%;
 
     align-items: center;
 
-    &:hover {
-        background-color: darken($buttonPrimary, 10%);
+    svg {
+        margin-right: 3px;
     }
 
     &:active {
         padding: 1.15em 4em 0.85em 4em;
+    }
+
+    &.--primary {
+		background-color: $buttonPrimary;
+
+        &:hover {
+            background-color: darken($buttonPrimary, 10%);
+        }
+    }
+
+    &.--danger {
+		background-color: $errorColor;
+
+        &:hover {
+            background-color: darken($errorColor, 10%);
+        }
     }
 
     &.--pending {

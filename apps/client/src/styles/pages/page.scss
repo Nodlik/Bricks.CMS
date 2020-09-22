@@ -12,16 +12,35 @@
 
 		padding-bottom: 0em;
         margin: 1em 0;
-        border-bottom: solid 1px $borderColor;
+		border-bottom: solid 1px $borderColor;
+		display: flex;
+		
+		.headerButton {
+			margin-left: auto;
+			font-size: 60%;
+		}
 	}
 	
 	&__actions {
 		padding: 0.7em;
 		margin: 1em 0;
+		position: relative;
 	
 		border: solid 1px darken($lightColor, 1%);
 		border-radius: 5px;
 	
 		background-color: lighten($lightColor, 1%);
+
+		.button {
+			margin-right: 1em;
+		}
+	}
+
+	.pa__text {
+		padding: 0 0 0.5em 0;
+		font-size: 70%;
+		text-transform: uppercase;
+		color: $headerColor;
+		font-weight: bold;
 	}
 }

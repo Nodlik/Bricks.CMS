@@ -87,7 +87,7 @@ export class BricksSingleton {
             return this.models.get(entityName)!;
         }
 
-        throw new Error(`Entity ${entityName} does not exist`);
+        throw new ServerError(ERROR_CODE.ENTITY_NOT_EXIST);
     }
 
     public getGlobalSalt(): string {

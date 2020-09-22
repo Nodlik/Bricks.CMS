@@ -1,6 +1,7 @@
 import { IBricksDocument, IField } from '@libs/types/IBricksDocument';
 
 import { Entity } from './Unit/Entity';
+import { ServerError } from '@libs/types/APIError';
 import mongoose from 'mongoose';
 
 export class BricksDocument {
@@ -8,6 +9,7 @@ export class BricksDocument {
     private readonly entity: Entity;
     private readonly id: string;
     private readonly fields: IField[];
+    private readonly mongoDocument: mongoose.Document;
 
     public constructor(entity: Entity, document: mongoose.Document) {
         this.entity = entity;
@@ -15,6 +17,7 @@ export class BricksDocument {
         this.id = this.document._id;
 
         this.fields = [];
+        this.mongoDocument = document;
         this.fillFields();
     }
 
@@ -43,6 +46,28 @@ export class BricksDocument {
 
     public getEntity(): Entity {
         return this.entity;
+    }
+
+    public getField(fieldKey: string): IField {
+        for (const field of this.fields) {
+            if (fieldKey === field.key) {
+                return field;
+            }
+        }
+
+        throw new ServerError(0);
+    }
+
+    public getValue<T>(fieldKey: string): T {
+        return this.getField(fieldKey).value as T;
+    }
+
+    public getPosition(): number {
+        if (!this.entity.getEffects().sortable) {
+            throw new ServerError(0);
+        }
+
+        return this.mongoDocument.get(this.entity.getEffects().sortable!) as number;
     }
 
     public getFields(): IField[] {

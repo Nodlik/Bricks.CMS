@@ -44,7 +44,7 @@ export function Validate(
     data: Record<string, unknown>,
     schema: yup.ObjectSchemaDefinition<any>,
     response: express.Response
-): Record<string, unknown> {
+): Record<string, any> {
     return getService<ValidateService>('validate', response).validate(data, schema);
 }
 

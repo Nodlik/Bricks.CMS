@@ -12,11 +12,10 @@ export class EntityRepository {
     ): Promise<mongoose.Document> {
         if (entity.getEffects().sortable) {
             if (doc.isNew) {
-                doc.set(
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    entity.getEffects().sortable!,
-                    await EntityRepository.Count(entity.getKey())
-                );
+                const last = await EntityRepository.GetLast(entity.getKey());
+                const newPostion = last ? last?.getPosition() + 1 : 0;
+
+                doc.set(entity.getEffects().sortable!, newPostion);
             }
         }
 
@@ -139,6 +138,22 @@ export class EntityRepository {
         const docs = await query;
 
         return docs.map((_) => new BricksDocument(entity, _));
+    }
+
+    public static async GetLast(entityKey: string): Promise<BricksDocument | null> {
+        const entity = BricksData.getEntity(entityKey);
+        const query = BricksData.getModel(entityKey).findOne();
+
+        if (entity.getEffects().sortable) {
+            void query.sort(`-${entity.getEffects().sortable!}`);
+        }
+
+        const doc = await query;
+        if (!doc) {
+            return null;
+        }
+
+        return new BricksDocument(entity, doc);
     }
 
     public static async Count(entityKey: string): Promise<number> {

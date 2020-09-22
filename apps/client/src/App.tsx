@@ -16,6 +16,7 @@ import { Loader } from './components/UI/Loader';
 import LoginPage from './pages/LoginPage';
 import NewEntityPage from './pages/NewPage';
 import Page404 from './pages/error/Page404';
+import Page500 from './pages/error/Page500';
 import useAuth from './hooks/auth';
 
 export type AppData = {
@@ -75,6 +76,9 @@ export default function App(): JSX.Element {
                         </Route>
                         <Route path="/404">
                             <Page404 />
+                        </Route>
+                        <Route path="/500">
+                            <Page500 />
                         </Route>
                         <Route path="/">
                             <HomePage />
